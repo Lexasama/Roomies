@@ -2,19 +2,25 @@
     <section class="jumbotron text-center">
         <div class="container">
             <h1 class="jumbotron-heading">Bienvenue sur Roomies</h1>
-            <p class="lead text-muted">Cette application est réalisée à l'aide du framework Vue 2.</p>
-            <p>
-                <a href="http://vuejs.org/v2/guide/" class="btn btn-primary my-2">Guide Vue 2</a>
-                <a href="http://vuejs.org/v2/api/" class="btn btn-secondary my-2">Documentation API Vue 2</a>
-            </p>
+            <button @click="changeLocale('fr')">fr</button>
+            <button @click="changeLocale('en')">en</button>
+            <p class="lead text-muted">{{$t('testMsg')}}</p>
         </div>
     </section>
 </template>
 
 <script>
+import i18n from '../plugins/i18n';
+
 export default {
 
+    methods: {
+            changeLocale(locale) {
+                   i18n.locale = locale;
+            }
+    }
 }
+
 </script>
 
 <style lang="scss">

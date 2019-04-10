@@ -1,4 +1,4 @@
-﻿namespace ITI.Roomies
+namespace ITI.Roomies
 {
     public class UserData
     {
@@ -11,7 +11,5 @@
         public string GoogleRefreshToken { get; set; }
 
         public string GoogleId { get; set; }
-
-        public int GithubId { get; set; }
     }
 }

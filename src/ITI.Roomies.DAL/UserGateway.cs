@@ -21,31 +21,8 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.UserId = @UserId",
+                    "select u.UserId, u.Email, u.[Password], u.GoogleRefreshToken, u.GoogleId from rm.vUser u where u.UserId = @UserId",
                     new { UserId = userId });
-            }
-        }
-
-        public async Task<Result<UserData>> FindGitHubUser(int userId)
-        {
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                UserData user = await con.QueryFirstOrDefaultAsync<UserData>(
-                    @"select u.UserId,
-                             u.Email,
-                             u.[Password],
-                             u.GithubAccessToken,
-                             u.GoogleRefreshToken,
-                             u.GoogleId,
-                             
-                      from iti.vUser u
-                      where u.UserId = @UserId;",
-                    new { UserId = userId });
-
-                if (user == null) return Result.Failure<UserData>(Status.BadRequest, "Unknown user.");
-                if (user.GithubId == 0) return Result.Failure<UserData>(Status.BadRequest, "This user is not a known github user.");
-
-                return Result.Success(user);
             }
         }
 
@@ -54,7 +31,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.Email = @Email",
+                    "select u.UserId, u.Email, u.[Password], u.GoogleRefreshToken, u.GoogleId from rm.vUser u where u.Email = @Email",
                     new { Email = email });
             }
         }
@@ -64,7 +41,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryFirstOrDefaultAsync<UserData>(
-                    "select u.UserId, u.Email, u.[Password], u.GithubAccessToken, u.GoogleRefreshToken, u.GoogleId, u.GithubId from iti.vUser u where u.GoogleId = @GoogleId",
+                    "select u.UserId, u.Email, u.[Password], u.GoogleRefreshToken, u.GoogleId from rm.vUser u where u.GoogleId = @GoogleId",
                     new { GoogleId = googleId });
             }
         }
@@ -78,7 +55,7 @@ namespace ITI.Roomies.DAL
                 p.Add("@Password", password);
                 p.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 p.Add("@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-                await con.ExecuteAsync("iti.sPasswordUserCreate", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("rm.sPasswordUserCreate", p, commandType: CommandType.StoredProcedure);
 
                 int status = p.Get<int>("@Status");
                 if (status == 1) return Result.Failure<int>(Status.BadRequest, "An account with this email already exists.");
@@ -93,7 +70,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 await con.ExecuteAsync(
-                    "iti.sGoogleUserCreateOrUpdate",
+                    "rm.sGoogleUserCreateOrUpdate",
                     new { Email = email, GoogleId = googleId, RefreshToken = refreshToken },
                     commandType: CommandType.StoredProcedure);
             }
@@ -104,7 +81,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 return await con.QueryAsync<string>(
-                    "select p.ProviderName from iti.vAuthenticationProvider p where p.UserId = @UserId",
+                    "select p.ProviderName from rm.vAuthenticationProvider p where p.UserId = @UserId",
                     new { UserId = userId });
             }
         }
@@ -113,7 +90,7 @@ namespace ITI.Roomies.DAL
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                await con.ExecuteAsync("iti.sUserDelete", new { UserId = userId }, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("rm.sUserDelete", new { UserId = userId }, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -122,7 +99,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 await con.ExecuteAsync(
-                    "iti.sUserUpdate",
+                    "rm.sUserUpdate",
                     new { UserId = userId, Email = email },
                     commandType: CommandType.StoredProcedure);
             }
@@ -133,7 +110,7 @@ namespace ITI.Roomies.DAL
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 await con.ExecuteAsync(
-                    "iti.sPasswordUserUpdate",
+                    "rm.sPasswordUserUpdate",
                     new { UserId = userId, Password = password },
                     commandType: CommandType.StoredProcedure);
             }

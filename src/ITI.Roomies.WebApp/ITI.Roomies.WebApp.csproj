@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Authentification\" />
+    <Compile Remove="Authentification\**" />
+    <Content Remove="Authentification\**" />
+    <EmbeddedResource Remove="Authentification\**" />
+    <None Remove="Authentification\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
   

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Claims;
 using System.Text;
 using ITI.Roomies.DAL;
@@ -8,7 +8,6 @@ using ITI.Roomies.WebApp.Services;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,7 +30,7 @@ namespace ITI.Roomies.WebApp
             services.AddOptions();
 
             services.AddMvc();
-            //services.AddSingleton( _ => new UserGateway( Configuration[ "ConnectionStrings:RoomiesDB" ] ) );
+            services.AddSingleton( _ => new UserGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             //services.AddSingleton( _ => new RoomiesGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             //services.AddSingleton( _ => new StudentGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             //services.AddSingleton( _ => new TeacherGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );

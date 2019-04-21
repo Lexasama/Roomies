@@ -53,8 +53,9 @@ namespace ITI.Roomies.WebApp.Controllers
             } );
         }
 
+    
         [HttpPost( "{email}/invite")]
-        public async Task<IActionResult> Invite( string email )
+        public async Task<IActionResult> InviteRoomie( string email )
         {
             //EmailMessage message = new EmailMessage();
             //EmailAddress emailAddress = new EmailAddress();
@@ -71,7 +72,7 @@ namespace ITI.Roomies.WebApp.Controllers
             bool enableSSL = true;
             string emailFromAddress = "ITI.Roomies@gmail.com"; //Sender Email Address
             string password = "0123456789A@"; //Sender Password
-            string subject = "Hello";
+            //string subject = "Hello";
             string body = "Test";
 
             using( MailMessage mail = new MailMessage() )

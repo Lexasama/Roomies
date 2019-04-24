@@ -8,11 +8,11 @@
   :before-upload="beforeAvatarUpload">
   <img v-if="imageUrl" :src="imageUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+  <el-button type="primary">Upload<i class="el-icon-upload el-icon-right"></i></el-button>
 </el-upload>
+<el-button type="primary">Upload<i class="el-icon-upload el-icon-right"></i></el-button>
 
 </template>
-
-
 
 <script>
   export default {
@@ -22,9 +22,11 @@
       };
     },
     methods: {
+
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
       },
+
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;

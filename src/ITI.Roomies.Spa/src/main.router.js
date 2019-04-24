@@ -13,6 +13,7 @@ import Login from  './components/Login.vue'
 import Logout from './components/Logout.vue'
 import Calendar from './components/Calendar.vue'
 import Collocation from './components/Collocation.vue'
+import ImageUploaderForm from './components/ImageUploaderForm.vue'
 
 import RoomiesCreate from './components/Roomies/RoomiesCreate.vue'
 import RoomieProfil from './components/Roomies/Roomie.vue'
@@ -30,8 +31,6 @@ const routes = [
 
     {path: '/roomies/calendar', component: Calendar, beforeEnter: requireAuth},
 
-    {path: '/roomies/collocation', component: Collocation, beforeEnter: requireAuth},
-    {path: '/roomies/collocation/:id?', component: Collocation, beforeEnter: requireAuth},
 
     { path: '/roomies/create', component: RoomiesCreate, beforeEnter: requireAuth },
     { path: '/roomies', component: RoomieProfil, beforeEnter: requireAuth },

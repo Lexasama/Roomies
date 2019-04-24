@@ -5,7 +5,7 @@ namespace ITI.Roomies.WebApp.Models.RoomieModel
 	public class RoomiesViewModel
 	{
 
-        //public int RoomieId { get; set; }
+        public int RoomieId { get; set; }
 
         public string FirstName { get; set; }
 

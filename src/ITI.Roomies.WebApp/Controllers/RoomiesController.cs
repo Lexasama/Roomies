@@ -57,22 +57,11 @@ namespace ITI.Roomies.WebApp.Controllers
         [HttpPost( "{email}/invite")]
         public async Task<IActionResult> InviteRoomie( string email )
         {
-            //EmailMessage message = new EmailMessage();
-            //EmailAddress emailAddress = new EmailAddress();
-            //emailAddress.Address = email ;
-            //emailAddress.Name = "";
-            //message.ToAddresses.Add( emailAddress);
-            //message.FromAddresses.Add( emailAddress );
-            //_emailService.Send( message );
-            //return Ok( 0 );
-
-
             string smtpAddress = "smtp.gmail.com";
             int portNumber = 587;
             bool enableSSL = true;
             string emailFromAddress = "ITI.Roomies@gmail.com"; //Sender Email Address
             string password = "0123456789A@"; //Sender Password
-            //string subject = "Hello";
             string body = "Test";
 
             using( MailMessage mail = new MailMessage() )
@@ -85,7 +74,6 @@ namespace ITI.Roomies.WebApp.Controllers
 
                 using( SmtpClient smtp = new SmtpClient( smtpAddress, portNumber ) )
                 {
-
                     smtp.Credentials = new NetworkCredential( emailFromAddress, password );
                     smtp.EnableSsl = enableSSL;
                     smtp.Send( mail );

@@ -1,4 +1,5 @@
-<template></template>
+<template>
+</template>
 
 
 <script>
@@ -31,6 +32,6 @@ export default {
 <style lang="scss">
 </style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../styles/global.scss";
 </style>

@@ -7,7 +7,7 @@ create table rm.tRoomies
 	BirthDate Datetime2 not  null,
 	Phone	  char(10) not null,
 	[Description] nvarchar(200),
-	RoomiePic nvarchar(45), 
+	RoomiePic int, 
 
 	constraint PK_rm_tRoomies primary key(RoomieId),
 	constraint CK_rm_tRoomies_Phone check( len(Phone) = 10 ),

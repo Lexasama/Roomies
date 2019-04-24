@@ -8,9 +8,7 @@
         </div>
     </section>
 </template>
-<style lang="scss">
-@import "../styles/global.scss";
-</style>
+
 <script>
 import i18n from '../plugins/i18n';
 
@@ -24,3 +22,7 @@ export default {
 }
 
 </script>
+
+<style lang="scss" scoped>
+@import "../styles/global.scss";
+</style>

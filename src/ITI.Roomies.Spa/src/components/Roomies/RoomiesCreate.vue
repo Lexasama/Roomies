@@ -37,12 +37,17 @@
       <el-button native-type="submit" class="btn btn-primary">Sauvegarder</el-button>
     </form>
   </div>
+
+  <div>
+    </index>
+  </div>
 </template>
 
 <script>
 import { createRoomieAsync } from "../../api/RoomiesApi";
 import { DateTime } from "luxon";
 import AuthService from "../../services/AuthService";
+import index from "../components/ImageUploader";
 
 export default {
   data() {

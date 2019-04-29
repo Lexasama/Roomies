@@ -18,6 +18,20 @@ export async function inviteRoomieAsync(email){
     return await postAsync((`${endpoint}/${email}/invite`));
 }
 
-export async function uploadRoomieImageAsync(roomieId,imageUrl) {
-    return await postAsync((`${endpoint}/${roomieId}/upload/${imageUrl}`));
+export async function uploadRoomieImageAsync(roomieId,formData) {
+
+    
+    var request = new XMLHttpRequest();
+    
+    request.open("POST", "{id}/upload/");
+    console.log(request);
+    debugger;
+    
+    image = request.send(formData);
+    console.log(image);
+    debugger;
+
+    return await postAsync((`${endpoint}/${roomieId}/upload/${image}`));
+
+    
 }

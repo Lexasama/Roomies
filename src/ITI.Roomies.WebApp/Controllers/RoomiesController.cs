@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using ITI.Roomies.WebApp.Authentication;
 using ITI.Roomies.WebApp.Models.RoomieModel;
 using ITI.Roomies.WebApp.Services.Email;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.Roomies.WebApp.Controllers
@@ -17,6 +19,7 @@ namespace ITI.Roomies.WebApp.Controllers
     public class RoomiesController : Controller
     {
         readonly RoomiesGateway _roomiesGateway;
+        readonly ImageGateway _imageGateway;
         readonly IEmailService _emailService;
 
         public RoomiesController( RoomiesGateway roomiesGateway )
@@ -81,15 +84,31 @@ namespace ITI.Roomies.WebApp.Controllers
             }
 
             return Ok( 0 );
+        }
+
+        [HttpPost( "{id}/upload/" )]
+        [Authorize( AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme )]
+        public async Task<IActionResult> ImageUpload( int userId, IFormFile image )
+        {
+            //image.GetType();
+            long size = image.Length;
+
+            //string userId = User.FindFirst(  ClaimTypes.NameIdentifier).Value;
+            //int userId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
 
 
+            string imgPath = @"..\Roomies\src\ITI.Roomies.DB\Pics\" + userId;
+            if( size > 0 )
+            {
+                using( var stream = new FileStream( imgPath, FileMode.Create ) )
+                {
+                    await image.CopyToAsync( stream );
+                }
+            }
 
+            await _imageGateway.AddImageOfRoomie( userId );
 
-
-
-
-
-
+            return Ok( new { size, imgPath } );
         }
     }
 }

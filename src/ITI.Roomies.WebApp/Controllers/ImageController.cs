@@ -14,7 +14,7 @@ namespace ITI.Roomies.WebApp.Controllers
     {
         readonly ImageGateway _imageGateway;
 
-        [HttpPost]
+        [HttpPost("UploadImage")]
         [Authorize( AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme)]
         public async Task<IActionResult> ImageUpload( IFormFile image)
         {

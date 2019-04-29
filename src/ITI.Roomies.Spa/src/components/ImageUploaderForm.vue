@@ -1,18 +1,15 @@
 <template>
 
-<!-- <form  enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index"> -->
 <div>
-  
-    <div class="form-group">
-        <div class="col-md-10">
-            <p>Importer votre photo {{id}}:</p>
-            <input id="uploader" type="file" name="files" multiple>
 
-            <button @click="upload" >submit</button>
-        </div>
-    </div>
+ <form enctype="multipart/form-data"  id="uploader" name="fileinfo">
+  <label>Import your image</label>
+  <input type="file" name="file"  />
+  <button   @click="upload">Upload</button>
+</form>
+
 </div>
-<!-- </form> -->
+
 
 </template>
 
@@ -34,26 +31,27 @@
 
     methods: {
 
-
       async upload(){
-        //console.log(document.getElementById("uploader");
+
         this.image = document.getElementById("uploader");
         console.log(this.image);
         console.log(this.id);
+        
+         //var formData = new FormData(this.image);
+        var formData = new FormData();
+        console.log(formData);
+        
+      //  if (this.image.files.length > 0) {
+         
+      //      for (var i = 0; i < this.image.files.length; i++) {
+      //          formData.append('file-' + i, this.image.files[i]);
+      //      }
+      //  }
+       console.log(formData);
 
-         var formData = new FormData();
-
-       if (image.files.length > 0) {
-           for (var i = 0; i < image.files.length; i++) {
-               formData.append('file-' + i, image.files[i]);
-           }
-       }
-       console.log(this.formData);
-        debugger;
         await uploadRoomieImageAsync(this.id,this.formData);
         
       }
-
     }
   }
 </script>

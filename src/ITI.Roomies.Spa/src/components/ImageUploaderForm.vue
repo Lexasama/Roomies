@@ -1,47 +1,64 @@
 <template>
 
-<el-upload
-  class="avatar-uploader"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :show-file-list="false"
-  :on-success="handleAvatarSuccess"
-  :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-</el-upload>
+<!-- <form  enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index"> -->
+<div>
+  
+    <div class="form-group">
+        <div class="col-md-10">
+            <p>Importer votre photo {{id}}:</p>
+            <input id="uploader" type="file" name="files" multiple>
+
+            <button @click="upload" >submit</button>
+        </div>
+    </div>
+</div>
+<!-- </form> -->
 
 </template>
 
 
 
 <script>
+  import {uploadRoomieImageAsync} from "../api/RoomiesApi.js"
+  
   export default {
     data() {
       return {
-        imageUrl: ''
+       image: null,
+       id: null,
       };
     },
-    methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+    mounted() {
+      this.id = this.$route.params.id;
+    },
 
-        if (!isJPG) {
-          this.$message.error('Avatar picture must be JPG format!');
-        }
-        if (!isLt2M) {
-          this.$message.error('Avatar picture size can not exceed 2MB!');
-        }
-        return isJPG && isLt2M;
+    methods: {
+
+
+      async upload(){
+        //console.log(document.getElementById("uploader");
+        this.image = document.getElementById("uploader");
+        console.log(this.image);
+        console.log(this.id);
+
+         var formData = new FormData();
+
+       if (image.files.length > 0) {
+           for (var i = 0; i < image.files.length; i++) {
+               formData.append('file-' + i, image.files[i]);
+           }
+       }
+       console.log(this.formData);
+        debugger;
+        await uploadRoomieImageAsync(this.id,this.formData);
+        
       }
+
     }
   }
 </script>
 
-<style>
+<style scoped>
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

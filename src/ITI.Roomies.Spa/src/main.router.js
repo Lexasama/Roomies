@@ -28,7 +28,7 @@ const routes = [
 
     {path: '/roomies/calendar', component: Calendar, beforeEnter: requireAuth},
 
-    {path: '/roomies/upload', component: ImageUploaderForm, beforeEnter: requireAuth},
+    {path: '/roomies/:id/upload', component: ImageUploaderForm, beforeEnter: requireAuth},
 
     { path: '/roomies/create', component: RoomiesCreate, beforeEnter: requireAuth },
     { path: '/roomies', component: RoomieProfil, beforeEnter: requireAuth },

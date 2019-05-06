@@ -3,8 +3,9 @@
             <el-header><h2>Bienvenue sur Roomies</h2></el-header>
 
             <el-button  @click="login('Google')" class="btn btn-lg btn-block btn-primary">
-                <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google</el-button>
-            <br/>
+              <br>
+                  <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google</el-button>
+              <br/>
             <el-button  @click="login('Base')" class="btn btn-lg btn-block btn-default">Se connecter via Roomies</el-button>
     </el-container>
 </template>

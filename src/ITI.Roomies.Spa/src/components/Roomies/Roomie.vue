@@ -2,7 +2,7 @@
   <el-container>
   <el-aside width="200px">Menu</el-aside>
   <el-container>
-    <el-header>Bienvenue Roomie</el-header>
+    <el-header>{{$t('wlc')}}</el-header>
   
     <v-calendar
   :columns="$screens({ default: 1, lg: 2 })"

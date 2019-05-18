@@ -17,31 +17,31 @@
   <el-container v-if="state == false">
     <el-main v-if="idIsUndefined == false">
       <el-hearder v-if="route == 'create'">
-        <h2>Créer une liste de course</h2>
+        <h2>{{$t("cCourse")}}</h2>
       </el-hearder>
 
       <el-header v-if="route == 'edit'">
-        <h2>Modifier la liste de course</h2>
+        <h2>{{$t('eCourse')}}</h2>
       </el-header>
 
       <el-form @submit="onSubmit($event)">
 
         <div>
-          <label class="required">Nom</label> <br>
+          <label class="required">{{$t("Nom")}}</label> <br>
           <input class="input_border" type="text" v-model="course.courseName" required>
         </div>
 
         <div>
-          <label> Date </label> <br>
+          <label> {{$t('Date')}} </label> <br>
           <input class="input_border" type="date" v-model="course.courseDate">
         </div>
 
-        <el-button @click="onSubmit">Sauvegarder</el-button>
+        <el-button @click="onSubmit">{{$t('save')}}</el-button>
       </el-form>
     </el-main>
-    <el-main v-else>Erreur</el-main>
+    <el-main v-else>{{$t('erreur')}}</el-main>
   </el-container>
-  <el-container v-else>Chargement en cours</el-container>
+  <el-container v-else>{{$t('loading')}}</el-container>
 </template>
 
 <script>

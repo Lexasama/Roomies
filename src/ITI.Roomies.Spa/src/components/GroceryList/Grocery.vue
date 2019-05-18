@@ -1,24 +1,24 @@
 <template>
   <div>
     <div>
-      <h1>Liste de Courses</h1>
+      <h1>{{$t("cListe")}}</h1>
       <div>
-        <router-link :to="`course/create`"> <i> Add </i> </router-link>
+        <router-link :to="`course/create`"> <i> {{$t("add")}} </i> </router-link>
       </div>
     </div>
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Price</th>
-          <th>Options</th>
+          <th>{{$t('Nom')}}</th>
+          <th>{{$t('Date')}}</th>
+          <th>{{$t('Price')}}</th>
+          <th>{{$t('Options')}}</th>
         </tr>
       </thead>
 
       <tbody>
         <tr v-if="groceryList.length == 0 ">
-          <td>Il n'y as pas de liste de courses</td>
+          <td>{{$t("nullCourse")}}</td>
         </tr>
 
         <tr v-else v-for="g of groceryList" :key="g.courseId">
@@ -26,8 +26,8 @@
           <td> {{ g.courseDate}} </td>
           <td> {{g.coursePrice}} </td>
           <td>
-                        <router-link :to="`course/edit/${g.courseId}`"><i>edit</i> </router-link>
-                        <router-link :to="`course/info/${g.courseId}`"><i>info</i></router-link>
+                        <router-link :to="`course/edit/${g.courseId}`"><i>{{$t('edit')}}</i> </router-link>
+                        <router-link :to="`course/info/${g.courseId}`"><i>Info</i></router-link>
                         <a href="#" @click="deleteList(g.courseId)">
                             <i class="fa fa-trash"></i>
                         </a>

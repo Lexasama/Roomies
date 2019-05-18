@@ -2,9 +2,9 @@
 
 <div>
   <div>
-    <h1> Item dans le liste {{courseName}}({{courseId}})</h1>
+    <h1> {{$t("lItem")}} {{courseName}}({{courseId}})</h1>
     <div>
-      <router-link :to="`item/create`"><i>Add</i></router-link>
+      <router-link :to="`item/create`"><i>{{$t('add')}}</i></router-link>
     </div>
   </div>
   
@@ -12,15 +12,15 @@
 
     <div v-if="itemList == 0">
         <tr>
-          <td>Il n'y as pas d'item dans la liste {{courseName}}</td>
+          <td>{{$t('nullItem')}} {{courseName}}</td>
         </tr>
       </div>
 
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Owner</th>
+        <th>{{$t('Nom')}}</th>
+        <th>{{$t('price')}}</th>
+        <th>Roomie</th>
         <th>Options</th>
       </tr>
     </thead>
@@ -32,9 +32,9 @@
         <td>{{i.itemPrice}}</td>
         <td>{{i.roomieId}}</td>
         <td>
-          <router-link :to="`item/edit/${i.itemId}`"><i>edit</i></router-link>
+          <router-link :to="`item/edit/${i.itemId}`"><i>{{$t('edit')}}</i></router-link>
           <a href="#" @click="deleteItem(i.itemId)">
-            <i>delete</i>
+            <i>{{$t('supp')}}</i>
           </a>
         </td>
       </tr>

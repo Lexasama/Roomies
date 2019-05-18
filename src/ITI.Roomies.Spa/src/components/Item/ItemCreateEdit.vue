@@ -3,27 +3,27 @@
  <el-container v-if="state == false">
     <el-main v-if="idIsUndefined == false">
       <el-header v-if="route == 'create'">
-      <h2>Ajouter un Item a la liste de course{{courseName}}</h2>
+      <h2>A{{$t('aItem')}}{{courseName}}</h2>
     </el-header>
     <el-header v-if="route == 'edit'">
-      <h2>Modifier l'item{{itemName}}</h2>
+      <h2>{{$t('eItem')}} {{itemName}}</h2>
     </el-header>
 
     <el-form @submit="onSubmit($event)">
 
       <div>
-        <label class="required">Nom</label> <br>
+        <label class="required">{{$t('Nom')}}</label> <br>
         <input class="input_border" type="text" v-model="item.itemName" required>
       </div>
 
       <div>
-        <label class="required">Prix</label>
+        <label class="required">{{$t('price')}}</label>
         <input class="input_border" type="text" v-model="item.itemPrice" required>
       </div>
 
 <!-- /!\ revinir dessus faire tune liste deffilantes avex le nom des liste/!\-->
       <div v-if="route =='edit'">
-        <label class="required">Liste</label>
+        <label class="required">{{$t('list')}}</label>
         <input class="input_border" type="text" v-model="item.courseId" required>
       </div>
 <!-- /!\ faire une liste defilante avec le nom des roomies /!\ -->
@@ -32,12 +32,12 @@
         <input class="input_border" type="text" v-model="item.roomieId" required>
       </div>
 
-      <el-button @click="onSubmit">Sauvegarder</el-button>
+      <el-button @click="onSubmit">{{$t('save')}}</el-button>
     </el-form>
   </el-main>
-  <el-main v-else>Erreur</el-main>
+  <el-main v-else>{{$t('erreur')}}</el-main>
 </el-container>
-<el-container v-else>Chargement en cours</el-container>
+<el-container v-else>{{$t('loading')}}</el-container>
   
 </template>
 

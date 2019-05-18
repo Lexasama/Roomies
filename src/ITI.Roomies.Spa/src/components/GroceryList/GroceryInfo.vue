@@ -2,7 +2,7 @@
   <div>
       
     <div>
-      <h1>Liste de course {{courseName}}</h1>
+      <h1>{{$t('cListe')}} {{courseName}}</h1>
     </div>
     <div>
       <item :courseId="courseId"></item>

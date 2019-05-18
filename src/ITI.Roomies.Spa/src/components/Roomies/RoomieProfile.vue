@@ -12,7 +12,7 @@
             <el-col>
               <div class="centerBox">
                 <h2>{{$t('pic')}}</h2>
-                <img class="profilePicture" :src="this.env+'/'+this.roomiePic" alt="Vous n'avez pas de photos de profil">
+                <img class="profilePicture" :src="this.env+'/'+this.roomiePic" alt={}>
                 <br>
                </div>
             </el-col>

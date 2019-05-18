@@ -1,17 +1,17 @@
 <template>
   <div>
     <div>
-      <h1>MODIFIER LA LISTE</h1>
+      <h1>{{$t('eCourse')}}</h1>
     </div>
 
     <form @submit="onSubmit($event)">
-      <label>Nom</label>
+      <label>{{$t('Nom')}}</label>
       <input type="text" v-model="course.CpurseName" required>
 
-      <label>Date</label>
+      <label>{{$t('Date')}}</label>
       <input type="date" v-model="course.CourseDate" required>
 
-      <button type="submit" class="btn btn-primary">Sauvegarder</button>
+      <button type="submit" class="btn btn-primary">{{('save')}}</button>
     </form>
 
   </div>

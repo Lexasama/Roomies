@@ -5,11 +5,13 @@
 </header>
 
 <main>
+  
+
   <form>
     <div class="alert alert-danger" v-if="errors.length > 0">
 
     </div>
-    <button class="btn btn-dark" @click="onSubmit">Sauvegarder</button>
+    <button class="btn btn-dark" @click="onSubmit">{{$t('save')}}</button>
   </form>
 </main>
 

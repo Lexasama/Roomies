@@ -35,7 +35,7 @@
         </div>
         <br>
         <br>
-        <button class="btn btn-dark" @click="onSubmit">Sauvegarder</button>
+        <button class="btn btn-dark" @click="onSubmit">{{$t('save')}}</button>
       </form>
     </main>
   </div>

@@ -8,7 +8,7 @@ create table rm.tItem
 
 	constraint PK_rm_tItem primary key (ItemId),
 	constraint FK_rm_tCourse_CourseId foreign key (CourseId) references rm.tCourse(CourseId),
-	constraint FK_rm_tCourse_RoomieId foreign key (RoomieId) references rm.tRoomies(RoomieId)
+	constraint FK_rm_tCourse_RoomieId foreign key (RoomieId) references rm.tRoomie(RoomieId)
 
 );
 

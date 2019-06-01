@@ -29,11 +29,15 @@ import TaskCreate from './components/Task/TaskCreateEdit.vue'
 
 import GroceryList from './components/GroceryList/Grocery.vue'
 import GroceryCreate from './components/GroceryList/GroceryCreate.vue'
-import GroceryEdit from './components/GroceryList/GroceryEdit.vue'
-import GroceryInfo from './components/GroceryList/GroceryInfo.vue'
 
 import Item from './components/Item/Item.vue'
 import ItemCreate from './components/Item/ItemCreateEdit.vue'
+
+import Spendings from './components/Spendings/Spendings.vue'
+import Category from './components/Spendings/CategoryCreateEdit.vue'
+
+import Budget from './components/Spendings/Budget.vue'
+import TransactionBudget from "./components/Spendings/Transaction/TransactionBudget.vue"
 
 
 const routes = [
@@ -45,13 +49,16 @@ const routes = [
     {path: '/roomies/calendar', component: Calendar, beforeEnter: requireAuth},
 
     {path: '/roomies/upload/:id?', component: ImageUploader, beforeEnter: requireAuth},
+    {path: '/roomies/upload/create/:id?', component: ImageUploader, beforeEnter: requireAuth},
 
     {path: '/roomies/collocation', component: Collocation, beforeEnter: requireAuth},
     {path: '/roomies/collocation/:id?', component: Collocation, beforeEnter: requireAuth},
 
+    {path: '/roomies/upload/colloc/:id?', component: ImageUploader, beforeEnter: requireAuth},
+
     { path: '/roomies/create', component: RoomiesCreate, beforeEnter: requireAuth },
     { path: '/roomies', component: RoomieProfil, beforeEnter: requireAuth },
-    { path: '/roomies/profile/:id?', component: RoomieProfile, beforeEnter: requireAuth },
+    { path: '/roomies/profile', component: RoomieProfile, beforeEnter: requireAuth },
     { path: '/checkRoomie', component: checkRoomie, beforeEnter: requireAuth },
 
     { path: '/task/colloc', component: TaskColloc, beforeEnter: requireAuth },
@@ -59,15 +66,23 @@ const routes = [
     { path: '/task/create', component: TaskCreate, beforeEnter: requireAuth },
     { path: '/task/edit/:id?', component: TaskCreate, beforeEnter: requireAuth },
     
-    { path: '/item', component: Item, beforeEnter: requireAuth},
-    { path: '/item/create', component: ItemCreate, beforeEnter: requireAuth },
-    { path: '/item/edit/:id?', component: ItemCreate, beforeEnter: requireAuth },
+    // { path: '/item', component: Item, beforeEnter: requireAuth},
+    // { path: '/item/create', component: ItemCreate, beforeEnter: requireAuth },
+    // { path: '/item/edit/:id?', component: ItemCreate, beforeEnter: requireAuth },
 
 
     { path: '/course', component: GroceryList, beforeEnter: requireAuth},
-    { path: '/course/edit/:id?', component: GroceryEdit, beforeEnter: requireAuth},
-    { path: '/course/info/:id?', component: GroceryInfo, beforeEnter: requireAuth},
+    { path: '/course/edit/:id?', component: GroceryCreate, beforeEnter: requireAuth},
+    { path: '/course/info/:id?', component: Item, beforeEnter: requireAuth},
+    { path: '/course/info/:id?/item/create', component: ItemCreate, beforeEnter: requireAuth},
+    { path: '/course/info/:id?/item/edit/:itemId?', component: ItemCreate, beforeEnter: requireAuth},
     { path: '/course/create', component: GroceryCreate, beforeEnter: requireAuth},
+
+    { path: '/spendings', component: Spendings, beforeEnter: requireAuth},
+    { path: '/Roomies/category', component: Category, beforeEnter: requireAuth},
+    { path: '/Roomies/budget', component: Budget, beforeEnter: requireAuth},
+    { path: '/Roomies/transaction', component: TransactionBudget, before: requireAuth},
+
 
 ];
 

@@ -25,3 +25,7 @@ export async function InviteAsync(email, collocId){
 export async function JoinAsync(invitationKey){
     return await postAsync(`${endpoint}/join/${invitationKey}`);
 };
+
+export async function getCollocInformation(collocId){
+    return await getAsync(`${endpoint}/getCollocInformation/${collocId}`)
+};

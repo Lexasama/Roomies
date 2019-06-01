@@ -40,9 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controllers\RoomiesController.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Update="Controllers\RoomiesController.cs" />
   </ItemGroup>
   
 </Project>

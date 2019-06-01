@@ -4,11 +4,11 @@
       <h2>Bienvenue sur Roomies</h2>
     </header>
 
-    <button @click="login('Google')" class="btn btn-lg btn-block btn-primary">
+    <button id="centered_container" @click="login('Google')" class="btn btn-lg btn-block btn-primary">
       <i class="fa fa-google" aria-hidden="true"></i> Se connecter via Google
     </button>
     <br>
-    <button
+    <button id="centered_container"
       @click="login('Base')"
       class="btn btn-block btn-lg btn-dark"
     >Se connecter via Roomies</button>
@@ -49,7 +49,7 @@ export default {
 
 <style lang="scss" scoped>
 iframe {
-  width: 100%;
+  width: 50%;
   height: 600px;
 }
 #centered_container{
@@ -59,6 +59,9 @@ iframe {
 }
 .centered{
    text-align:center;
+}
+.btn-block{
+  max-width: 30em;
 }
 
 

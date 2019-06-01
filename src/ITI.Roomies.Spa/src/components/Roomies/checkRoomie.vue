@@ -24,6 +24,8 @@ export default {
           var collocData = await getCollocNameIdByRoomieIdAsync();
           this.$currColloc.setCollocId(collocData.collocId);
           this.$currColloc.setCollocName(collocData.collocName);
+          this.$setMenuItemDisabled.setDisableState(false);
+          
         } catch (e) {
           console.log(e);
         }
@@ -32,7 +34,7 @@ export default {
         // this.$checked = true;
         // Affiche le menu de navigation
         document.getElementById("navMenu").style.display = "block";
-        this.$router.replace("/roomies/" + dataToRoute.roomieId);
+        this.$router.replace("/roomies");
         }
 
       }

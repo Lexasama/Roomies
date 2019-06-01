@@ -114,13 +114,20 @@ namespace ITI.Roomies.WebApp.Controllers
             if (result != 0 )
             {
                 int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
-                await _collRoomGateway.AddCollRoom( roomieId, result );
+                await _collRoomGateway.AddCollRoom( result, roomieId );
                 await _collocGateway.DeleteInvite(invitationKey);
                 return result;
             }
 
 
             return result;
+        }
+
+        [HttpGet( "getCollocInformation/{collocId}" )]
+        public async Task<IActionResult> getCollocInformation( int collocId )
+        {
+            IEnumerable<CollocData> result = await _collocGateway.getCollocInformation(collocId);
+            return this.Ok( result );
         }
     }
 }

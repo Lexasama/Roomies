@@ -1,67 +1,71 @@
 <template>
+  <div class="createContainer" v-if="state == false">
+    <main v-if="idIsUndefined == false">
+      <header v-if="route == 'create'">
+        <h2>Ajouter un Item a la liste de course {{item.courseId}}</h2>
+      </header>
+      <header v-if="route == 'edit'">
+        <h2>Modifier l'item {{itemNameToShow}}</h2>
+      </header>
 
- <el-container v-if="state == false">
-    <el-main v-if="idIsUndefined == false">
-      <el-header v-if="route == 'create'">
-      <h2>Ajouter un Item a la liste de course{{courseName}}</h2>
-    </el-header>
-    <el-header v-if="route == 'edit'">
-      <h2>Modifier l'item{{itemName}}</h2>
-    </el-header>
+      <form>
+        <div>
+          <label class="required">Nom</label>
+          <br>
+          <input class="form-control" type="text" v-model="item.itemName" required>
+        </div>
 
-    <el-form @submit="onSubmit($event)">
+        <div>
+          <label class="required">Prix</label>
+          <input class="form-control" type="number" v-model="item.itemPrice" required>
+        </div>
 
-      <div>
-        <label class="required">Nom</label> <br>
-        <input class="input_border" type="text" v-model="item.itemName" required>
-      </div>
-
-      <div>
-        <label class="required">Prix</label>
-        <input class="input_border" type="text" v-model="item.itemPrice" required>
-      </div>
-
-<!-- /!\ revinir dessus faire tune liste deffilantes avex le nom des liste/!\-->
-      <div v-if="route =='edit'">
+        <!-- /!\ TO DO : faire tune liste deffilantes avex le nom des liste/!\-->
+        <!-- <div v-if="route =='edit'">
         <label class="required">Liste</label>
         <input class="input_border" type="text" v-model="item.courseId" required>
-      </div>
-<!-- /!\ faire une liste defilante avec le nom des roomies /!\ -->
-      <div>
+        </div>-->
+        <!-- /!\ TO DO : faire une liste defilante avec le nom des roomies /!\ -->
+        <!-- <div>
         <label class="required">Roomie</label>
         <input class="input_border" type="text" v-model="item.roomieId" required>
-      </div>
-
-      <el-button @click="onSubmit">Sauvegarder</el-button>
-    </el-form>
-  </el-main>
-  <el-main v-else>Erreur</el-main>
-</el-container>
-<el-container v-else>Chargement en cours</el-container>
-  
+        </div>-->
+        <br>
+        <button class="btn btn-dark" @click="onSubmit">Sauvegarder</button>
+      </form>
+    </main>
+    <main v-else>Erreur</main>
+  </div>
+  <div v-else>
+    <loading/>
+  </div>
 </template>
 
 <script>
-
 import AuthService from "../../services/AuthService";
-import {state} from "../../state";
-import {getItemListAsync, createItemAsync} from "../../api/ItemApi.js";
+import { state } from "../../state";
+import {
+  createItemAsync,
+  getItemByItemIdAsync,
+  updateItemAsync
+} from "../../api/ItemApi.js";
+import Loading from "../../components/Utility/Loading.vue";
 
 export default {
-  // props: ,
+  components: {
+    Loading
+  },
   data() {
-    return{
-      errors:[],
+    return {
+      errors: [],
       item: {},
-      roomieList: [],
-      courseList:[],
-      route: null,
       idIsUndefined: true,
       state: true,
-      id: null,
-    }
+      itemNameToShow: "",
+      route: null
+    };
   },
-  computed:{
+  computed: {
     auth: () => AuthService,
 
     isLoading() {
@@ -70,54 +74,72 @@ export default {
   },
 
   async mounted() {
-    this.id = this.$route.params.id;
+    this.item.courseId = this.$route.params.id;
 
-    if(this.$route.fullPath.replace("/item/","") == "create") {
+    if (
+      this.$route.fullPath.replace(
+        "/course/info/" + this.item.courseId + "/item/",
+        ""
+      ) == "create"
+    ) {
       this.route = "create";
       this.idIsUndefined = false;
-    }else {
+    } else {
       this.route = "edit";
 
-      if( this.$route.params.id == undefined) {
+      if (this.$route.params.itemId == undefined) {
         this.idIsUndefined = true;
-
-      }else{
-
-        this.id = this.$route.params.id;
-
-        try{
-          
-          
-           
-        } catch(e) {
+      } else {
+        try {
+          this.item = (await getItemByItemIdAsync(
+            this.$route.params.itemId
+          )).content;
+          this.itemNameToShow = this.item.itemName;
+          this.idIsUndefined = false;
+        } catch (e) {
           console.log(e);
           this.idIsUndefined = true;
-
         }
       }
     }
     this.state = false;
-
   },
 
   methods: {
-    async onSubmit(event) {
-      try{
-        await create
-                
+    async onSubmit() {
+      event.preventDefault();
+
+      var errors = [];
+
+      if (!this.item.itemName) errors.push("Nom");
+      if (!this.item.itemPrice) errors.push("Prix");
+
+      if (errors.length == 0) {
+        try {
+          if (this.route == "create") {
+            await createItemAsync(this.item);
+            this.$router.push("/course/info/" + this.item.courseId);
+          }
+          if (this.route == "edit") {
+            this.item.itemId = parseInt(this.$route.params.itemId);
+            await updateItemAsync(this.item);
+            this.$router.push("/course/info/" + this.item.courseId);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        for (var j = 0; j < errors.length; j++) {
+          console.log(errors[j]);
+        }
       }
-      finally{
-
-      }
-
-    },
-
-  },
-}
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 .input_border {
   border-width: 1px;
-  }
+}
 </style>

@@ -1,99 +1,90 @@
 <template>
-  <!-- <div>
-    <div>
-      <h1 > Creer une liste  de course</h1>
-    </div>
-    <div>
-      <form @submit="onSubmit($event)">
-        <label>Nom</label>
-        <input type="text" v-model="course.courseName">
-        <label>Date</label>
-        <input type="date" v-model="course.courseDate">
-        <button type="submit">Sauvegarder</button>
-      </form>
-    </div>
-  </div> -->
-
-  <el-container v-if="state == false">
-    <el-main v-if="idIsUndefined == false">
-      <el-hearder v-if="route == 'create'">
+  <div class="createContainer" v-if="!state">
+    <main v-if="!idIsUndefined">
+      <header v-if="route == 'create'">
         <h2>Créer une liste de course</h2>
-      </el-hearder>
+      </header>
 
-      <el-header v-if="route == 'edit'">
+      <header v-if="route == 'edit'">
         <h2>Modifier la liste de course</h2>
-      </el-header>
+      </header>
 
-      <el-form @submit="onSubmit($event)">
-
+      <form>
         <div>
-          <label class="required">Nom</label> <br>
-          <input class="input_border" type="text" v-model="course.courseName" required>
+          <label class="required">Nom</label>
+          <br>
+          <input class="form-control" type="text" v-model="course.courseName" required>
         </div>
 
         <div>
-          <label> Date </label> <br>
-          <input class="input_border" type="date" v-model="course.courseDate">
+          <label>Date</label>
+          <br>
+          <input class="form-control" type="date" v-model="course.courseDate">
         </div>
 
-        <el-button @click="onSubmit">Sauvegarder</el-button>
-      </el-form>
-    </el-main>
-    <el-main v-else>Erreur</el-main>
-  </el-container>
-  <el-container v-else>Chargement en cours</el-container>
+        <br>
+        <button class="btn btn-dark" @click="onSubmit">Sauvegarder</button>
+      </form>
+    </main>
+    <main v-else>Erreur</main>
+  </div>
+  <div v-else>
+    <loading/>
+  </div>
 </template>
 
 <script>
-
-import {createGroceryListAsync, getGroceryListByIdAsync, updateAgroceryListAsync} from "../../api/GroceriesApi"
+import {
+  createGroceryListAsync,
+  getGroceryListByIdAsync,
+  updateAgroceryListAsync
+} from "../../api/GroceriesApi";
 import AuthService from "../../services/AuthService";
-import {state} from "../../state";
+import { state } from "../../state";
+import Loading from "../../components/Utility/Loading.vue";
 
 export default {
+  components: {
+    Loading
+  },
   data() {
-    return{
+    return {
       errors: [],
       course: {},
-      checkedRoomiesList:[],
+      checkedRoomiesList: [],
       route: null,
       idIsUndefined: true,
       state: true,
-      id: null,
-    }
+      id: null
+    };
   },
 
   computed: {
-    auth: () =>AuthService,
+    auth: () => AuthService,
 
     isLoading() {
       return this.state.isLoading;
     }
   },
   async mounted() {
-
-      //route
-    if(this.$route.fullPath.replace("/course/","") == "create") {
+    //route
+    if (this.$route.fullPath.replace("/course/", "") == "create") {
       this.route = "create";
       this.idIsUndefined = false;
-    }else {
+    } else {
       this.route = "edit";
 
-      if( this.$route.params.id == undefined) {
+      if (this.$route.params.id == undefined) {
         this.idIsUndefined = true;
+      } else {
+        this.course.courseId = this.$route.params.id;
 
-      }else{
-
-        this.id = this.$route.params.id;
-
-        try{
-          this.course = await getGroceryListByIdAsync(this.id);
-          
-           
-        } catch(e) {
+        try {
+          this.course = await getGroceryListByIdAsync(this.course.courseId);
+          this.idIsUndefined = false;
+        } catch (e) {
           console.log(e);
           this.idIsUndefined = true;
-
         }
       }
     }
@@ -101,32 +92,36 @@ export default {
   },
 
   methods: {
-    async onSubmit(event) {
+    async onSubmit() {
       event.preventDefault();
 
       var errors = [];
 
-      if(!this.course.courseName) errors.push("Nom");
-      if(!this.course.courseDate) errors.push("Date");
+      if (!this.course.courseName) errors.push("Nom");
+      if (!this.course.courseDate) errors.push("Date");
 
-      if(errors.length == 0){
-        try{
-
-          if(this.route == "create"){
+      if (errors.length == 0) {
+        try {
+          if (this.route == "create") {
+            this.course.collocId = this.$currColloc.collocId;
             await createGroceryListAsync(this.course);
+            this.$router.push("/course");
           }
-        }catch(e){
+          if (this.route == "edit") {
+            await updateAgroceryListAsync(this.course);
+            this.$router.push("/course");
+          }
+        } catch (e) {
           console.error(e);
         }
-      }else {
-        for (var j = 0; j<errors.length; j++) {
+      } else {
+        for (var j = 0; j < errors.length; j++) {
           console.log(errors[j]);
         }
       }
-    },
-
-  },
-}
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

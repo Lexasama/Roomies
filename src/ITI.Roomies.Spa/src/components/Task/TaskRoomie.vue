@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div class="container">
     <header>
       <h2>Tâches</h2>
     </header>
@@ -23,10 +23,16 @@
               <td>{{ task.taskDes }}</td>
               <td>{{ task.taskDate }}</td>
               <td v-if="!task.state">
-                <button class="btn btn-dark" @click="updateState(task.taskId, true)">{{ task.state }}</button>
+                <button
+                  class="btn btn-dark"
+                  @click="updateState(task.taskId, true)"
+                >{{ task.state }}</button>
               </td>
               <td v-else>
-                <button class="btn btn-dark" @click="updateState(task.taskId, false)">{{ task.state }}</button>
+                <button
+                  class="btn btn-dark"
+                  @click="updateState(task.taskId, false)"
+                >{{ task.state }}</button>
               </td>
               <td>{{task.firstName}}</td>
               <td>
@@ -41,7 +47,9 @@
       </div>
       <div v-else>Aucune tâche à afficher</div>
     </main>
-    <main v-else>Chargement en cours</main>
+    <main v-else>
+      <loading/>
+    </main>
 
     <header>
       <h2>Historique</h2>
@@ -77,7 +85,9 @@
       </table>
       <div v-else>Aune tâche à afficher</div>
     </main>
-    <main v-else>Chargement en cours</main>
+    <main v-else>
+      <loading/>
+    </main>
   </div>
 </template>
 
@@ -89,9 +99,13 @@ import {
   UpdateTaskStateAsync,
   DeleteTaskByIdAsync
 } from "../../api/TaskApi.js";
+import Loading from "../../components/Utility/Loading.vue";
 // import { state } from "../../state";
 
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
       errors: [],
@@ -114,14 +128,12 @@ export default {
   methods: {
     async updateState(taskIdToUpdate, taskNewState) {
       await UpdateTaskStateAsync(taskIdToUpdate, taskNewState);
-      // TO DO : Changer la ligne suivante en actualisation des données affichées.
-      document.location.reload(true);
+      this.getTasks();
     },
 
     async deleteTask(taskId) {
       await DeleteTaskByIdAsync(taskId);
-      // TO DO : Changer la ligne suivante en actualisation des données affichées.
-      document.location.reload(true);
+      this.getTasks();
     },
 
     async modifierTâche(taskId) {
@@ -131,10 +143,12 @@ export default {
     async getTasks() {
       try {
         this.futureTaskData = await GetTasksByRoomieIdAsync();
+        this.taskData = [];
+        this.taskHistoriqueData = [];
 
         if (this.taskData.length == this.futureTaskData) {
           this.taskData = "Nada";
-          console.log(this.taskData);
+          this.taskHistoriqueData = "Nada";
         } else {
           // TO DO : LE FAIRE EN SQL BORDEL
           // Prend la valeur de la première colloc
@@ -149,7 +163,9 @@ export default {
             // Si la tâche est différente de la précédente
             if (this.futureTaskData[task].taskId != currTaskDataTaskId) {
               // Ajoute la tâche précédente à un tableau temporaire possédant toutes les tâches de la collocation
-              this.futureTaskData[task - 1].firstName = tempRoomieList;
+              this.futureTaskData[task - 1].firstName = tempRoomieList.join(
+                ", "
+              );
               // tempArray.push(this.futureTaskData[task-1]);
               if (!this.futureTaskData[task - 1].state)
                 tempArray.push(this.futureTaskData[task - 1]);
@@ -179,6 +195,8 @@ export default {
           // this.futureTaskData[task].firstName = tempRoomieList;
           // tempArray.push(this.futureTaskData[task]);
 
+          this.futureTaskData[task].firstName = tempRoomieList.join(", ");
+
           if (!this.futureTaskData[task].state)
             tempArray.push(this.futureTaskData[task]);
           else tempArray2.push(this.futureTaskData[task]);
@@ -190,10 +208,9 @@ export default {
               taskArray: tempArray
             });
           else this.taskData = "Nada";
-          
+
           if (tempArray2.length != 0) this.taskHistoriqueData = tempArray2;
           else this.taskHistoriqueData = "Nada";
-          console.log(this.taskData);
         }
       } catch (e) {
         console.log(e);

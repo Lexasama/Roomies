@@ -35,7 +35,38 @@ namespace ITI.Roomies.DAL
                 return Result.Success( course );
             }
         }
+        public async Task<Result<CourseTempData>> FindTempById ( int courseId)
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                CourseTempData courseTemp = await con.QueryFirstOrDefaultAsync<CourseTempData>(
+                    @"select c.CourseId,
+                             c.CourseName,
+                            c.CoursePrice,
+                            c.CollocId
+                        from rm.tCourseTemp c
+                        where c.CourseId = @CourseId;",
+                    new { CourseId = courseId } );
 
+                if( courseTemp == null ) return Result.Failure<CourseTempData>( Status.NotFound, "Course Template not found" );
+                return Result.Success( courseTemp );
+            }
+        }
+
+        public async Task<IEnumerable<CourseTempData>> GetAllTemp( int collocId )
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                return await con.QueryAsync<CourseTempData>(
+                    @"select c.CourseId,
+                              c.CourseName,
+                              c.CoursePrice,
+                              c.CollocId
+                        from rm.tCourse c
+                         where c.CollocId = @CollocId;",
+                    new { CollocId = collocId } );
+            }
+        }
         public async Task<IEnumerable<CourseData>> GetAll( int collocId)
         {
             using( SqlConnection con = new SqlConnection( _connectionString ) )
@@ -75,6 +106,30 @@ namespace ITI.Roomies.DAL
             }
         }
 
+        public async Task<Result<int>> CreateTempGroceryList( string courseName, int collocId )
+        {
+            if( !IsNameValid( courseName ) ) return Result.Failure<int>( Status.BadRequest, "The Name is not valid." );
+
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                var p = new DynamicParameters();
+                p.Add( "@CourseName", courseName );
+                p.Add( "@CollocId", collocId );
+                p.Add( "@CourseId", dbType: DbType.Int32, direction: ParameterDirection.Output );
+                p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
+                await con.ExecuteAsync( "rm.sCourseTempCreate", p, commandType: CommandType.StoredProcedure );
+
+                int status = p.Get<int>( "@Status" );
+                if( status == 1 ) return Result.Failure<int>( Status.BadRequest, "A Grocery List Template with this name already exists." );
+
+                Debug.Assert( status == 0 );
+                return Result.Success( Status.Created, p.Get<int>( "@CourseId" ) );
+
+            }
+        }
+
+
+
         public async Task<Result> DeleteGroceryList( int courseId )
         {
 
@@ -93,9 +148,28 @@ namespace ITI.Roomies.DAL
             }
         }
 
-        public async Task<Result> UpdateGroceryList( int courseId, string courseName, DateTime courseDate, int collocId)
+        public async Task<Result> DeleteGroceryListTemp( int courseId )
         {
-            if( !IsNameValid( courseName ) ) return Result.Failure( Status.BadRequest, "The first name is not valid." );
+
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                var p = new DynamicParameters();
+                p.Add( "@CourseId", courseId );
+                p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
+                await con.ExecuteAsync( "rm.sCourseTempDelete", p, commandType: CommandType.StoredProcedure );
+
+                int status = p.Get<int>( "@Status" );
+                if( status == 1 ) return Result.Failure( Status.NotFound, "Grocery list Template  not found." );
+
+                Debug.Assert( status == 0 );
+                return Result.Success();
+            }
+        }
+
+
+        public async Task<Result> UpdateGroceryList( int courseId, string courseName, DateTime courseDate)
+        {
+            if( !IsNameValid( courseName ) ) return Result.Failure( Status.BadRequest, "The course name is not valid." );
 
 
             using( SqlConnection con = new SqlConnection( _connectionString ) )
@@ -104,19 +178,40 @@ namespace ITI.Roomies.DAL
                 var p = new DynamicParameters();
                 p.Add( "@CourseName", courseName );
                 p.Add( "@CourseDate", courseDate );
-                p.Add( "@CollocId", collocId );
-                p.Add( "@CourseId", dbType: DbType.Int32, direction: ParameterDirection.Output );
+                p.Add( "@CourseId", courseId, dbType: DbType.Int32);
                 p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
                 await con.ExecuteAsync( "rm.sCourseUpdate", p, commandType: CommandType.StoredProcedure );
 
                 int status = p.Get<int>( "@Status" );
                 if( status == 1 ) return Result.Failure( Status.NotFound, "Grocery List not found." );
-                if( status == 2 ) return Result.Failure( Status.BadRequest, "A Grocery List with this name already exists." );
                
                 Debug.Assert( status == 0 );
                 return Result.Success( Status.Ok );
             }
         }
+
+        public async Task<Result> UpdateGroceryListTemp( int courseId, string courseName)
+        {
+            if( !IsNameValid( courseName ) ) return Result.Failure( Status.BadRequest, "The name is not valid." );
+
+
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+
+                var p = new DynamicParameters();
+                p.Add( "@CourseName", courseName );
+                p.Add( "@CourseId", courseId, dbType: DbType.Int32 );
+                p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
+                await con.ExecuteAsync( "rm.sCourseTempUpdate", p, commandType: CommandType.StoredProcedure );
+
+                int status = p.Get<int>( "@Status" );
+                if( status == 1 ) return Result.Failure( Status.NotFound, "Grocery List Template not found." );
+
+                Debug.Assert( status == 0 );
+                return Result.Success( Status.Ok );
+            }
+        }
+
 
         bool IsNameValid( string name ) => !string.IsNullOrWhiteSpace( name );
 

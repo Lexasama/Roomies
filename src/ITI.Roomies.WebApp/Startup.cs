@@ -44,6 +44,11 @@ namespace ITI.Roomies.WebApp
             services.AddSingleton( _ => new TaskRoomGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             services.AddSingleton(_ => new CourseGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             services.AddSingleton(_ => new ImageGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new CategoryGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new BudgetGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new TransactionGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+
+
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<RoomiesService>();
             services.AddSingleton<TokenService>();

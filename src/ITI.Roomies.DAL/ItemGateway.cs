@@ -35,21 +35,39 @@ namespace ITI.Roomies.DAL
             }
         }
 
-        public async Task<IEnumerable<ItemData>> GetAll( int courseId )
+        public async Task<Result<RItemData>> FindRItemById( int rItemId )
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                RItemData rItem = await con.QueryFirstOrDefaultAsync<RItemData>(
+                    @"select i.RoomieId,
+                             i.ItemPrice,
+                             i.ItemName,
+                             i.CourseId,
+                             i.RoomieId
+                      from rm.tItem i
+                      where i.ItemId = @ItemId;",
+                    new { ItemId = rItemId } );
+                if( rItem == null ) return Result.Failure<RItemData>( Status.NotFound, "Item not found." );
+                return Result.Success( rItem );
+            }
+        }
+        public async Task<IEnumerable<ItemData>> GetAllItemFromList( int courseId )
         {
             using( SqlConnection con = new SqlConnection( _connectionString ) )
             {
                 return await con.QueryAsync<ItemData>(
                     @"select i.ItemId,
                              i.ItemPrice,
-                             i.ItemName
+                             i.ItemName,
+                             i.RoomieId
                        from rm.tItem i
                        where i.CourseId = @CourseId",
                     new {CourseId = courseId} );
             }
         }
 
-        public async Task<Result<int>> CreateItem( int itemPrice, string itemName, int courseId, int roomieId )
+        public async Task<Result> CreateItem( int itemPrice, string itemName, int courseId, int roomieId )
         {
             if( !IsNameValid( itemName ) ) return Result.Failure<int>( Status.BadRequest, "The item name is not valid." );
 
@@ -60,13 +78,12 @@ namespace ITI.Roomies.DAL
                 p.Add( "@ItemName", itemName );
                 p.Add( "@CourseId", courseId );
                 p.Add( "@RoomieId", roomieId );
-                p.Add( "@ItemId", dbType: DbType.Int32, direction: ParameterDirection.Output );
                 p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
                 await con.ExecuteAsync( "rm.sItemCreate", p, commandType: CommandType.StoredProcedure );
 
                 int status = p.Get<int>( "@Status" );
                 Debug.Assert( status == 0 );
-                return Result.Success( Status.Created, p.Get<int>( "@ItemId" ) );
+                return Result.Success( status);
             }
         }
 
@@ -87,7 +104,7 @@ namespace ITI.Roomies.DAL
             }
         }
 
-        public async Task<Result> Update(int itemId, int itemPrice, string itemName, int courseId,  int roomieId)
+        public async Task<Result> UpdateItem(int itemId, int itemPrice, string itemName, int courseId,  int roomieId)
         {
             if( !IsNameValid( itemName ) ) return Result.Failure( Status.BadRequest, "The item name is not valid." );
 

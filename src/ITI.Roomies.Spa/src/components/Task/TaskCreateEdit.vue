@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="state == false">
+  <div class="createContainer" v-if="state == false">
     <main v-if="idIsUndefined == false">
       <header v-if="route == 'create'">
         <h2>Créer une tâche</h2>
@@ -18,28 +18,40 @@
         </div>-->
 
         <div>
-          <label class="required">Nom</label> <br>
-          <input class="form-control" type="text" v-model="item.TaskName" required/>
+          <label class="required">Nom</label>
+          <br>
+          <input class="form-control" type="text" v-model="item.TaskName" required>
         </div>
 
         <div>
           <label>Description</label>
           <!-- <el-input type="textarea" v-model="item.TaskDes"/> -->
           <br>
-          <textarea  class="form-control textarea_width" v-model="item.TaskDes"/>
+          <textarea class="form-control textarea_width" v-model="item.TaskDes"/>
         </div>
 
         <div>
           <label class="required">Echéance</label>
           <!-- <el-input type="datetime-local" id="echeance" v-model="item.TaskDate" required/> -->
           <br>
-          <input  class="form-control" type="datetime-local" id="echeance" v-model="item.TaskDate" required/>
+          <input
+            class="form-control"
+            type="datetime-local"
+            id="echeance"
+            v-model="item.TaskDate"
+            required
+          >
         </div>
         <br>
         <br>
         <tr v-for="roomie of roomiesList" :key="roomie.roomieId">
           <td>
-            <input v-if="route == 'edit'" type="checkbox" :id="'roomie' + roomie.roomieId" :checked="roomie.checked">
+            <input
+              v-if="route == 'edit'"
+              type="checkbox"
+              :id="'roomie' + roomie.roomieId"
+              :checked="roomie.checked"
+            >
             <input v-else type="checkbox" :id="'roomie' + roomie.roomieId" checked>
             <label :for="'roomie' + roomie.roomieId">{{ roomie.firstName }} {{ roomie.lastName }}</label>
           </td>
@@ -51,7 +63,9 @@
     </main>
     <main v-else>Erreur</main>
   </div>
-  <div id="container" v-else>Chargement en cours</div>
+  <div v-else>
+    <loading/>
+  </div>
 </template>
 
 <script>
@@ -59,9 +73,17 @@ import { DateTime } from "luxon";
 import AuthService from "../../services/AuthService";
 import { state } from "../../state";
 import { GetRoomiesIdNamesByCollocIdAsync } from "../../api/CollocationApi.js";
-import { createTaskAsync, GetTaskByTaskIdAsync, UpdateTaskAsync } from "../../api/TaskApi.js";
+import {
+  createTaskAsync,
+  GetTaskByTaskIdAsync,
+  UpdateTaskAsync
+} from "../../api/TaskApi.js";
+import Loading from "../../components/Utility/Loading.vue";
 
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
       errors: [],
@@ -82,7 +104,6 @@ export default {
     }
   },
   async mounted() {
-
     // Route
     if (this.$route.fullPath.replace("/task/", "") == "create") {
       this.route = "create";
@@ -98,10 +119,10 @@ export default {
           this.item.TaskName = getTask[0].taskName;
           this.item.TaskDes = getTask[0].taskDes;
           this.item.TaskDate = getTask[0].taskDate;
-          for(var task in getTask){
+          for (var task in getTask) {
             this.checkedRoomiesList.push(getTask[task].roomieId);
           }
-          
+
           this.idIsUndefined = false;
         } catch (e) {
           console.log(e);
@@ -115,8 +136,12 @@ export default {
       this.roomiesList = await GetRoomiesIdNamesByCollocIdAsync(
         this.$currColloc.collocId
       );
-      for(var roomie in this.roomiesList){
-        if(this.checkedRoomiesList.indexOf(this.roomiesList[roomie].roomieId) != -1) this.roomiesList[roomie].checked = true;
+      for (var roomie in this.roomiesList) {
+        if (
+          this.checkedRoomiesList.indexOf(this.roomiesList[roomie].roomieId) !=
+          -1
+        )
+          this.roomiesList[roomie].checked = true;
         else this.roomiesList[roomie].checked = false;
       }
     } catch (e) {
@@ -151,7 +176,7 @@ export default {
       if (errors.length == 0) {
         try {
           this.item.collocId = this.$currColloc.collocId;
-          if(this.route == 'create') await createTaskAsync(this.item);
+          if (this.route == "create") await createTaskAsync(this.item);
           else await UpdateTaskAsync(this.id, this.item);
           this.$router.replace("/task/colloc");
         } catch (e) {

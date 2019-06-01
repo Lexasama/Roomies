@@ -12,5 +12,7 @@ namespace ITI.Roomies.DAL
 
         public string CollocPic { get; set; }
 
+        public string RoomiesName { get; set; }
+
     }
 }

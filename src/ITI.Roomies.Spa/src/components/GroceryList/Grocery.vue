@@ -39,7 +39,7 @@
         </tbody>
       </table>
     </main>
-    <br>
+    <br />
     <router-link :to="`course/create`">
       <button class="btn btn-dark">Nouvelle liste</button>
     </router-link>
@@ -53,7 +53,7 @@
       style="
     max-width: 12rem;
 "
-@click="refreshItemList()"
+      @click="refreshItemList()"
     >Objets enregistrés</button>
 
     <button
@@ -68,11 +68,32 @@
     >Enregistrer un objet</button>
 
     <main class="card mainCard">
-      <br>
+      <br />
       <div class="collapse" id="createItem">
-        <createItemForm/>
+        <div v-if="state == false">
+          <main v-if="idIsUndefined == false">
+            <form>
+              <div>
+                <label class="required">Nom</label>
+                <br />
+                <input class="form-control" type="text" v-model="item.itemName" required />
+              </div>
+
+              <div>
+                <label>Prix</label>
+                <input class="form-control" type="number" v-model="item.itemPrice" />
+              </div>
+              <br />
+              <button class="btn btn-dark" @click="createSavedItem">Enregistrer</button>
+            </form>
+          </main>
+          <main v-else>Erreur</main>
+        </div>
+        <div v-else>
+          <loading />
+        </div>
       </div>
-      <br>
+      <br />
       <div class="collapse" id="listItem">
         <table class="table table-dark">
           <div v-if="savedItemList == 0">
@@ -116,11 +137,12 @@ import {
   deleteSavedItemAsync
 } from "../../api/ItemApi.js";
 import createItemForm from "../../components/Item/createItemForm.vue";
+import Loading from "../../components/Utility/Loading.vue";
 // import monthFr from "../../components/Utility/month.js";
 
 export default {
   components: {
-    createItemForm
+    Loading
   },
   props: [],
   data() {
@@ -129,13 +151,20 @@ export default {
       templateList: [],
       savedItemList: [],
       errors: [],
-      item: {}
+      item: {},
+      idIsUndefined: true,
+      state: true
     };
   },
 
   async mounted() {
     this.monthList = require("../../components/Utility/month.js");
     await this.refreshList();
+    if (
+      this.$currColloc.collocId != this.$currColloc.collocId.isNullOrUndefined
+    )
+      this.idIsUndefined = false;
+    this.state = false;
   },
 
   methods: {
@@ -158,15 +187,16 @@ export default {
       }
     },
 
-    async refreshItemList(){
-      try{
+    async refreshItemList() {
+      this.state = true;
+      try {
         this.savedItemList = await getSavedItemListFromCollocAsync(
           this.$currColloc.collocId
         );
-      }
-      catch(e){
+      } catch (e) {
         console.log(e);
       }
+      this.state = false;
     },
 
     async deleteList(courseId) {
@@ -236,12 +266,7 @@ export default {
 
       let monthToDisplay = this.monthList.monthFr[laDate.getMonth()];
 
-      return (
-        dayToDisplay +
-        " " +
-        monthToDisplay
-       
-      );
+      return dayToDisplay + " " + monthToDisplay;
     },
     async deleteItem(itemId) {
       try {
@@ -251,6 +276,34 @@ export default {
         console.log(e);
       } finally {
         await this.refreshList();
+      }
+    },
+    async createSavedItem() {
+      event.preventDefault();
+
+      var errors = [];
+
+      if (!this.item.itemName) errors.push("Nom");
+
+      if (errors.length == 0) {
+        try {
+          this.item.collocId = this.$currColloc.collocId;
+          this.item.itemSaved = true;
+          this.item.itemPrice = this.item.itemPrice * 100;
+          await createItem(this.item);
+
+          this.item.itemPrice = null;
+          this.item.itemName = null;
+          // window.alert("Objet enregistré");
+        } catch (e) {
+          console.error(e);
+        } finally {
+          this.refreshItemList();
+        }
+      } else {
+        for (var j = 0; j < errors.length; j++) {
+          console.log(errors[j]);
+        }
       }
     }
   }

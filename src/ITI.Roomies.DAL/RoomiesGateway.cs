@@ -62,12 +62,26 @@ namespace ITI.Roomies.DAL
             }
         }
 
+        public async Task<Result<string>> GetCollocPicAsync( int collocId )
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                string result = await con.QueryFirstAsync<string>(
+                    @"select p.CollocPic from rm.vCollocPic p where p.CollocId = @CollocId",
+                new { CollocId = collocId } );
+
+                if( result == null ) return Result.Failure<string>( Status.NotFound, "Colloc has no pictures" );
+
+                return Result.Success( result );
+            }
+        }
+
         public async Task<Result<string>> GetRoomiePicAsync( int roomieId )
         {
             using( SqlConnection con = new SqlConnection( _connectionString ) )
             {
                 string result = await con.QueryFirstAsync<string>(
-                    "select p.RoomiePic from rm.vRoomiesPic p where p.RoomieId = @RoomieId",
+                    @"select p.RoomiePic from rm.vRoomiesPic p where p.RoomieId = @RoomieId",
                 new { RoomieId = roomieId });
 
                 if( result == null ) return Result.Failure<string>( Status.NotFound, "Roomie has no pictures" );

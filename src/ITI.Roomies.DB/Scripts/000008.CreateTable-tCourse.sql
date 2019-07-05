@@ -2,7 +2,7 @@ create table rm.tCourse
 (
 	CourseId int identity(0,1),
 	CourseName nvarchar(32) not null,
-	CourseDate datetime2 not null,
+	CourseDate datetime2,
 	CoursePrice int,
 	CollocId int not null,
 

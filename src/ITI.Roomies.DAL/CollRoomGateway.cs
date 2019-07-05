@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Dapper;
+using System.Collections.Generic;
 
 namespace ITI.Roomies.DAL
 {
@@ -121,9 +121,16 @@ namespace ITI.Roomies.DAL
                 p.Add( "@CollocId", collocId );
                 p.Add( "@RoomieId", roomieId );
 
-
+                int statusColloc = await con.QueryFirstOrDefaultAsync<int>(@"select AdminColloc from rm.tiCollRoom where Collocid =@CollocId", new {CollocId=collocId } );
+                int countColloc = await con.QueryFirstOrDefaultAsync<int>( @"select Count(RoomieId) from rm.tiCollRoom where Collocid=@CollocId", new {CollocId=collocId} );
                 await con.ExecuteAsync( "rm.sCollRoomDelete", p, commandType: CommandType.StoredProcedure );
-
+                if( statusColloc == 1 && countColloc!=1)
+                {
+                    int nextColloc = await con.QueryFirstOrDefaultAsync<int>( @"select CollocId from rm.tiCollRoom where CollocId=@CollocId", new { CollocId = collocId } );
+                    var p2 = new DynamicParameters();
+                    p2.Add( "@RoomieId", nextColloc );
+                    await con.ExecuteAsync( "rm.sCollocNewAdmin", p2, commandType: CommandType.StoredProcedure );
+                }
                 return Result.Success(  );
 
             }

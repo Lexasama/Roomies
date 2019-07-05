@@ -3,7 +3,6 @@
 
 <script>
 import AuthService from "../../services/AuthService";
-import { state } from "../../state";
 import { FindByEmail } from "../../api/RoomiesApi";
 import { getCollocNameIdByRoomieIdAsync } from "../../api/CollocationApi";
 

@@ -161,10 +161,8 @@ namespace ITI.Roomies.WebApp.Controllers
         [Authorize( AuthenticationSchemes = JwtBearerAuthentication.AuthenticationScheme )]
         public async Task<IActionResult> ImageUpload( IFormFile image )
         {
-            //image.GetType();
             long size = image.Length;
-
-            //string userId = User.FindFirst(  ClaimTypes.NameIdentifier).Value;
+            
             int userId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
 
 

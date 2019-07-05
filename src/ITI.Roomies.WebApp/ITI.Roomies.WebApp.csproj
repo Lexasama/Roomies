@@ -1,17 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Authentification\**" />
-    <Content Remove="Authentification\**" />
-    <EmbeddedResource Remove="Authentification\**" />
-    <None Remove="Authentification\**" />
-  </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\CourseViewModels\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   
@@ -37,12 +32,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Controllers\RoomiesController.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   
 </Project>

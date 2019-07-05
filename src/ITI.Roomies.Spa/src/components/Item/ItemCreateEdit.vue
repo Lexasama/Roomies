@@ -1,5 +1,5 @@
 <template>
-  <div id="container" v-if="state == false">
+  <div  v-if="state == false">
     <main v-if="idIsUndefined == false">
       <header v-if="route == 'create'">
         <h2>Ajouter un Item a la liste de course {{item.courseId}}</h2>
@@ -16,8 +16,13 @@
         </div>
 
         <div>
-          <label class="required">Prix</label>
-          <input class="form-control" type="number" v-model="item.itemPrice" required>
+          <label>Prix</label>
+          <input class="form-control" type="number" v-model="item.itemPrice">
+        </div>
+
+        <div>
+          <label>Nombre</label>
+          <input class="form-control" type="text" v-model="item.itemQuantite">
         </div>
 
         <!-- /!\ TO DO : faire tune liste deffilantes avex le nom des liste/!\-->
@@ -36,20 +41,24 @@
     </main>
     <main v-else>Erreur</main>
   </div>
-  <div id="container" v-else>Chargement en cours</div>
+  <div v-else>
+    <loading/>
+  </div>
 </template>
 
 <script>
 import AuthService from "../../services/AuthService";
-import { state } from "../../state";
 import {
-  createItemAsync,
+  createItem,
   getItemByItemIdAsync,
-updateItemAsync
+  updateItemAsync
 } from "../../api/ItemApi.js";
+import Loading from "../../components/Utility/Loading.vue";
 
 export default {
-  // props: ,
+  components: {
+    Loading
+  },
   data() {
     return {
       errors: [],
@@ -57,7 +66,8 @@ export default {
       idIsUndefined: true,
       state: true,
       itemNameToShow: "",
-      route: null
+      route: null,
+      collocId: null,
     };
   },
   computed: {
@@ -70,6 +80,7 @@ export default {
 
   async mounted() {
     this.item.courseId = this.$route.params.id;
+    this.collocId = this.$currColloc.collocId;
 
     if (
       this.$route.fullPath.replace(
@@ -92,7 +103,7 @@ export default {
           this.itemNameToShow = this.item.itemName;
           this.idIsUndefined = false;
         } catch (e) {
-          console.log(e);
+          console.error(e);
           this.idIsUndefined = true;
         }
       }
@@ -111,14 +122,16 @@ export default {
 
       if (errors.length == 0) {
         try {
+          this.item.collocId = this.collocId;
           if (this.route == "create") {
-            await createItemAsync(this.item);
-            this.$router.push('/course/info/'+ this.item.courseId);
+            this.item.collocId = this.collocId;
+            await createItem(this.item);
+            this.$router.push("/course/info/" + this.item.courseId);
           }
           if (this.route == "edit") {
             this.item.itemId = parseInt(this.$route.params.itemId);
             await updateItemAsync(this.item);
-            this.$router.push('/course/info/'+ this.item.courseId);
+            this.$router.push("/course/info/" + this.item.courseId);
           }
         } catch (e) {
           console.error(e);

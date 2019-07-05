@@ -23,18 +23,23 @@ namespace ITI.Roomies.DAL
 
         }
 
-        public async Task<List<string>> UploadImage( IFormFileCollection images, int roomieId )
+        public async Task<List<string>> UploadImage( IFormFileCollection images, int id, bool isRoomie )
         {
-            //string message = "image has been uploaded";
             List<string> message = new List<string>();
-            string path = _path + "/" + roomieId;
+            string path = _path + "/RoomiePics/" + id;
+
+            if( !isRoomie)
+            {
+                path = _path + "/CollocPics/" + id;
+            }
+            
             this.ExistDirectory( path );
             IFormFile file = images[0];
             
             string fileName = file.FileName;
 
             fileName = file.FileName.Substring( fileName.LastIndexOf( "." ) );
-            string name = roomieId.ToString() + fileName;
+            string name = id.ToString() + fileName;
 
             string filePath = Path.Combine( path, name);
             
@@ -43,11 +48,35 @@ namespace ITI.Roomies.DAL
                 await file.CopyToAsync( fileStream );
                 System.Console.WriteLine("PASSED");
             }
-            string serverLink = "Pictures/" + roomieId + "/" + name;
+            string serverLink = "Pictures/CollocPics/" + id + "/" + name;
 
-            await UpdateRoomiePic(roomieId, serverLink  );
+            if(!isRoomie)
+            {
+                await UpdateCollocPic( id, serverLink );
+            }
+            else
+            {
+                serverLink = "Pictures/RoomiePics/" + id + "/" + name;
+                await UpdateRoomiePic( id, serverLink );
+            }
+
             return message;
-            
+        }
+
+        public async Task<Result> UpdateCollocPic( int collocId, string serverLink )
+        {
+            using( SqlConnection con = new SqlConnection( _connectingString ) )
+            {
+                var p = new DynamicParameters();
+                p.Add( "@CollocId", collocId );
+                p.Add( "@CollocPic", serverLink );
+                p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
+                await con.ExecuteAsync( "rm.sCollocPicUpdate", p, commandType: CommandType.StoredProcedure );
+                int status = p.Get<int>( "@Status" );
+                if( status == 1 ) return Result.Failure( Status.NotFound, "Colloc not found." );
+                Debug.Assert( status == 0 );
+                return Result.Success( Status.Ok );
+            }
         }
 
         public async Task<Result> UpdateRoomiePic(int roomieId, string roomiePic)
@@ -84,7 +113,7 @@ namespace ITI.Roomies.DAL
 
             string extension = Path.GetExtension( path );
 
-             return extension;
+            return extension;
         }
 
         internal void ExistDirectory( string path )
@@ -95,6 +124,5 @@ namespace ITI.Roomies.DAL
                 Directory.CreateDirectory( path );
             }
         }
-
     }
 }

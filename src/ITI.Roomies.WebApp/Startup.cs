@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Claims;
 using System.Text;
 using ITI.Roomies.DAL;
+using ITI.Roomies.DAL.Spendings.TransactionsGateways;
 using ITI.Roomies.WebApp.Authentication;
 using ITI.Roomies.WebApp.Controllers;
 using ITI.Roomies.WebApp.Services;
@@ -44,6 +45,12 @@ namespace ITI.Roomies.WebApp
             services.AddSingleton( _ => new TaskRoomGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             services.AddSingleton(_ => new CourseGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
             services.AddSingleton(_ => new ImageGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new CategoryGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new BudgetGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new TBudgetGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+            services.AddSingleton( _ => new TDepenseGateway( Configuration["ConnectionStrings:RoomiesDB"] ) );
+
+
             services.AddSingleton<PasswordHasher>();
             services.AddSingleton<RoomiesService>();
             services.AddSingleton<TokenService>();
@@ -137,7 +144,6 @@ namespace ITI.Roomies.WebApp
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Account", action = "Login" });
             });
-
             app.UseStaticFiles();
         }
 

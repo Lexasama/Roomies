@@ -1,7 +1,13 @@
 <template>
-  <div class="container">
-  <!-- <div> -->
-    <header>
+  <div id="app">
+    <el-steps class="el-steps_header" space="50%" :active="0">
+      <el-step title="Informations" icon="el-icon-edit"></el-step>
+      <el-step title="Photo" icon="el-icon-picture"></el-step>
+      <el-step class="flex_basis_0" title="Colocation"></el-step>
+    </el-steps>
+    
+    
+    <header class="header_steps">
       <h2>S'inscrire</h2>
     </header>
     <main>
@@ -16,22 +22,22 @@
 
         <div>
           <label class="required">Nom</label>
-          <input class="form-control" type="text" v-model="item.lastName" required/>
+          <input class="form-control" type="text" v-model="item.lastName" required>
         </div>
 
         <div>
           <label class="required">Prénom</label>
-          <input class="form-control" type="text" v-model="item.firstName" required/>
+          <input class="form-control" type="text" v-model="item.firstName" required>
         </div>
 
         <div>
           <label class="required">Date de naissance</label>
-          <input class="form-control" type="date" v-model="item.birthDate" required/>
+          <input class="form-control" type="date" v-model="item.birthDate" required>
         </div>
 
         <div>
-          <label class="required">Phone</label>
-          <input class="form-control" type="text" v-model="item.phone" required/>
+          <label class="required">Téléphone</label>
+          <input class="form-control" type="text" v-model="item.phone" required>
         </div>
         <br>
         <br>
@@ -75,8 +81,7 @@ export default {
       if (errors.length == 0) {
         try {
           var idRoomie = await createRoomieAsync(this.item);
-          this.$router.replace("/roomies/" + idRoomie);
-          document.getElementById("navMenu").style.display = "block";
+          this.$router.replace("/upload/roomie/create/"+idRoomie);
         } catch (e) {
           console.error(e);
         }
@@ -85,13 +90,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-
-
-.container{
-  margin-left: 0;
-  // margin-left: 0;
-  margin-right: 0;
-}
-</style>

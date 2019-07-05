@@ -1,4 +1,3 @@
-/* -------- Forms -------- */
 .required:after {
     content: " *";
     font-weight: bold;
@@ -6,48 +5,131 @@
     color: red;
 }
 header{
-    padding-top: 5vh;
-    padding-left: 4em;
+    padding-top: 1rem;
+    padding-left: 6rem;
   }
-
-// html *{
-//     background-color: rgb(102,102,102);
-// }
-// .container {
-//     background-color: rgb(102,102,102);
-// }
-
-html, main{
-    background-color: rgb(120,120,120);
+  
+html, main, #app{
+    // background-color: rgb(200,200,200) !important;
 }
-
-// main{
-//     background-color: rgb(80,80,80);
-// }
-
-body *{
-    // color: rgb(255,56,140);
-    color: rgb(0,0,0);
+html, body, #app, content *{
+    height: 100% !important;
+}
+body, #app, content *{
+  min-height: 100% !important;
+}
+body{
     font-weight: 500;
 }
 
+body{
+  color: rgb(0,0,0);
+}
+
+a:link, a:visited, a:hover, a:active {
+  color:#495057 !important;
+}  
+
 .form-control{
-    max-width: 15em;
+    max-width: 15rem;
     border: 2px solid #000000 !important;
-  }
+}
+
+.el-input__inner{
+  border: 2px solid #000000 !important;
+}
 
 .btn-dark{
-    color: rgb(255,56,140) !important;
+    // color: rgb(220,220,220) !important;
     font-weight: 500 !important;
     border: 1px solid #000000 !important;
 }
 
-.table-dark{
-    max-width: 60em;
-    background-color: rgb(60,60,60) !important;
-    // border-top-color: rgb(240,240,190) !important;
-}
+
 
 .textarea_width{
-    max-width: 25em;
+    max-width: 25rem !important;
+    // width: 20rem !important;
+    min-width: 15rem !important;
+    resize: both;
+    // resize: vertical;
   }
+
+#app{
+    position: relative;
+    // min-height: 100vh;
+    padding-bottom: 6rem !important;
+}
+main{
+  padding-bottom: 2rem;
+  margin-top: 1.5rem;
+}
+
+.cardBorder {
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+.el-menu, #footer {
+    background-color: rgb(230, 230, 230) !important;
+  }
+
+.createContainer{
+    padding-left: 8rem !important;
+}
+
+.container{
+  max-width: 80rem !important;
+  // margin-left: 12.5rem !important;
+  // padding-left: 5rem !important;
+}
+
+#globalContainer{
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  padding-left: 0px !important;
+  margin-left: 12.5rem;
+  max-width: 85%;
+}
+
+.containerCard, .card{
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.2rem;
+}
+
+.containerCard, .el-step__icon{
+  background-color: rgb(200,200,200) !important;
+}
+
+body, #app, content *{
+  // background-color: #b18f5f;
+  background-color: rgb(250,250,250);
+}
+
+.mainCard{
+  // background-color: #b18f5f !important; 
+  background-color: #e2e8f08a !important; 
+ }
+
+
+ .el-step__head.is-wait,
+ .el-step__title.is-wait{
+  color: #828790 !important;
+ }
+
+.el-step__line{
+  background-color: #8f9196 !important;
+}
+
+.flex_basis_0{
+  flex-basis: 0% !important;
+}
+
+.header_steps{
+margin-top: 4rem;
+}
+
+.el-steps_header{
+  margin-top: 1rem; left: 25%; right:25%; position: absolute;
+}

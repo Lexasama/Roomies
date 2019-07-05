@@ -20,7 +20,7 @@ namespace ITI.Roomies.WebApp.Controllers
         readonly CollocGateway _collocGateway;
         readonly CollRoomGateway _collRoomGateway;
 
-        public CollocationController( CollocGateway collocGateway, CollRoomGateway collRoomGateway)
+        public CollocationController( CollocGateway collocGateway, CollRoomGateway collRoomGateway )
         {
             _collocGateway = collocGateway;
             _collRoomGateway = collRoomGateway;
@@ -33,18 +33,18 @@ namespace ITI.Roomies.WebApp.Controllers
             int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
 
             Result<int> result = await _collocGateway.CreateColloc( model.CollocName, roomieId );
-          
 
-            return  result.Content ;
+
+            return result.Content;
 
         }
 
-        [HttpDelete("quitColloc/{collocId}")]
-        public async Task<IActionResult> LeaveCollocation(int collocId)
+        [HttpDelete( "quitColloc/{collocId}" )]
+        public async Task<IActionResult> LeaveCollocation( int collocId )
         {
 
             int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
-            Result result = await _collRoomGateway.LeaveCollocation(collocId, roomieId);
+            Result result = await _collRoomGateway.LeaveCollocation( collocId, roomieId );
             return this.Ok( result );
         }
 
@@ -53,7 +53,7 @@ namespace ITI.Roomies.WebApp.Controllers
         public async Task<IActionResult> GetCollocNameIdByRoomieIdAsync()
         {
             int userId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
-            Result <CollocData> result = await _collRoomGateway.FindCollocNameByRoomieId( userId );
+            Result<CollocData> result = await _collRoomGateway.FindCollocNameByRoomieId( userId );
             return this.CreateResult( result );
         }
 
@@ -66,15 +66,15 @@ namespace ITI.Roomies.WebApp.Controllers
         }
 
         [HttpPost( "{email}/invite/{idColloc}" )]
-        public async Task<int> Invite( string email ,int idColloc)
+        public async Task<int> Invite( string email, int idColloc )
         {
 
             int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
             string invitationKey = Guid.NewGuid().ToString();
 
-            int receiverId = await _collocGateway.getRoomieIdByEmail(email);
+            int receiverId = await _collocGateway.getRoomieIdByEmail( email );
 
-            if(receiverId != 0)
+            if( receiverId != 0 )
             {
                 string smtpAddress = "smtp.gmail.com";
                 int portNumber = 587;
@@ -99,7 +99,7 @@ namespace ITI.Roomies.WebApp.Controllers
                         smtp.Send( mail );
                     }
                 }
-                await _collocGateway.Invitation(invitationKey,receiverId,roomieId,idColloc);
+                await _collocGateway.Invitation( invitationKey, receiverId, roomieId, idColloc );
 
 
                 return 1;
@@ -111,11 +111,11 @@ namespace ITI.Roomies.WebApp.Controllers
         public async Task<int> InviteAsync( string invitationKey )
         {
             int result = await _collocGateway.CheckInvitation( invitationKey );
-            if (result != 0 )
+            if( result != 0 )
             {
                 int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
                 await _collRoomGateway.AddCollRoom( result, roomieId );
-                await _collocGateway.DeleteInvite(invitationKey);
+                await _collocGateway.DeleteInvite( invitationKey );
                 return result;
             }
 
@@ -126,8 +126,33 @@ namespace ITI.Roomies.WebApp.Controllers
         [HttpGet( "getCollocInformation/{collocId}" )]
         public async Task<IActionResult> getCollocInformation( int collocId )
         {
-            IEnumerable<CollocData> result = await _collocGateway.getCollocInformation(collocId);
+            IEnumerable<CollocData> result = await _collocGateway.getCollocInformation( collocId );
             return this.Ok( result );
         }
+
+        [HttpGet( "IsAdminAsync/{collocId}" )]
+        public async Task<int> IsAdminAsync( int collocId )
+        {
+            int roomieId = int.Parse( HttpContext.User.FindFirst( c => c.Type == ClaimTypes.NameIdentifier ).Value );
+            int result = await _collocGateway.IsAdminAsync( collocId, roomieId );
+            return result;
+        }
+
+
+        [HttpDelete( "DestroyCollocAsync/{collocId}" )]
+        public async Task<IActionResult> DestroyCollocAsync( int collocId )
+        {
+            Result result = await _collocGateway.DestroyCollocAsync( collocId );
+            return this.Ok( result );
+        }
+
+        [HttpGet( "getCollocPic" )]
+        public async Task<IActionResult> getCollocPic( int collocId )
+        {
+            Result<string> collocPic = await _collocGateway.GetCollocPic( collocId );
+
+            return this.CreateResult( collocPic );
+        }
+
     }
 }

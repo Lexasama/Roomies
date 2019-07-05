@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div>
     <header>
       <h2>Tâches</h2>
     </header>
@@ -47,7 +47,9 @@
       </div>
       <div v-else>Aucune tâche à afficher</div>
     </main>
-    <main v-else>Chargement en cours</main>
+    <main v-else>
+      <loading/>
+    </main>
 
     <header>
       <h2>Historique</h2>
@@ -83,7 +85,9 @@
       </table>
       <div v-else>Aune tâche à afficher</div>
     </main>
-    <main v-else>Chargement en cours</main>
+    <main v-else>
+      <loading/>
+    </main>
   </div>
 </template>
 
@@ -95,9 +99,12 @@ import {
   UpdateTaskStateAsync,
   DeleteTaskByIdAsync
 } from "../../api/TaskApi.js";
-// import { state } from "../../state";
+import Loading from "../../components/Utility/Loading.vue";
 
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
       errors: [],
@@ -120,14 +127,12 @@ export default {
   methods: {
     async updateState(taskIdToUpdate, taskNewState) {
       await UpdateTaskStateAsync(taskIdToUpdate, taskNewState);
-      // TO DO : Changer la ligne suivante en actualisation des données affichées.
-      document.location.reload(true);
+      this.getTasks();
     },
 
     async deleteTask(taskId) {
       await DeleteTaskByIdAsync(taskId);
-      // TO DO : Changer la ligne suivante en actualisation des données affichées.
-      document.location.reload(true);
+      this.getTasks();
     },
 
     async modifierTâche(taskId) {
@@ -137,6 +142,8 @@ export default {
     async getTasks() {
       try {
         this.futureTaskData = await GetTasksByRoomieIdAsync();
+        this.taskData = [];
+        this.taskHistoriqueData = [];
 
         if (this.taskData.length == this.futureTaskData) {
           this.taskData = "Nada";
@@ -155,7 +162,9 @@ export default {
             // Si la tâche est différente de la précédente
             if (this.futureTaskData[task].taskId != currTaskDataTaskId) {
               // Ajoute la tâche précédente à un tableau temporaire possédant toutes les tâches de la collocation
-              this.futureTaskData[task - 1].firstName = tempRoomieList;
+              this.futureTaskData[task - 1].firstName = tempRoomieList.join(
+                ", "
+              );
               // tempArray.push(this.futureTaskData[task-1]);
               if (!this.futureTaskData[task - 1].state)
                 tempArray.push(this.futureTaskData[task - 1]);
@@ -180,10 +189,7 @@ export default {
               currTaskDataColloc = this.futureTaskData[task].collocId;
             }
           }
-
-          // Ajoute la dernière tâche
-          // this.futureTaskData[task].firstName = tempRoomieList;
-          // tempArray.push(this.futureTaskData[task]);
+          this.futureTaskData[task].firstName = tempRoomieList.join(", ");
 
           if (!this.futureTaskData[task].state)
             tempArray.push(this.futureTaskData[task]);

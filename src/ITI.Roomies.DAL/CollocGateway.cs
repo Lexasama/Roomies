@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
 
 namespace ITI.Roomies.DAL
 {
@@ -139,6 +140,48 @@ namespace ITI.Roomies.DAL
                 , new { CollocId = collocId } );
 
                 return colloc;
+            }
+        }
+
+        public async Task<int> IsAdminAsync( int collocId, int roomieId )
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                int result = await con.QueryFirstOrDefaultAsync<int>(
+                     @"select AdminColloc from rm.tiCollRoom where CollocId=@CollocId and RoomieId=@RoomieId",
+                     new { CollocId = collocId, RoomieId= roomieId } );
+
+                return result;
+            }
+        }
+
+        public async Task<Result<string>> GetCollocPic( int collocId )
+        {
+           using( SqlConnection con = new SqlConnection( _connectionString))
+           {
+                string result = await con.QueryFirstAsync<string>(
+                    @"select p.CollocPic from rm.tColloc c where c.CollocId = @CollocId",
+                    new { CollocId = collocId } );
+                if( result == null ) return Result.Failure<string>( Status.NotFound, "FlatSharing has no pictures" );
+
+                return Result.Success( result );
+            }
+        }
+
+        public async Task<Result> DestroyCollocAsync( int collocId)
+        {
+            using( SqlConnection con = new SqlConnection( _connectionString ) )
+            {
+                var p = new DynamicParameters();
+                p.Add( "@CollocId", collocId );
+                p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
+                await con.ExecuteAsync( "rm.sDeleteColloc", p, commandType: CommandType.StoredProcedure );
+
+                int status = p.Get<int>( "@Status" );
+                if( status == 1 ) return Result.Failure( Status.NotFound, "Roomie not found." );
+
+                Debug.Assert( status == 0 );
+                return Result.Success();
             }
         }
 

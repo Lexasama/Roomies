@@ -22,9 +22,9 @@ export async function inviteRoomieAsync(email){
     return await postAsync((`${endpoint}/${email}/invite`));
 }
 
-export async function uploadImage( image ){
-    return await postAsync((`${endpoint}/${image}`));
-}
 export async function getRoomiePicAsync() {
     return await getStringAsync(`${endpoint}/getRoomiePic`);
+}
+export async function getCollocPicAsync(collocId){
+    return await getStringAsync(`${endpoint}/getCollocPic/${collocId}`);
 }

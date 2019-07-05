@@ -37,8 +37,6 @@ namespace ITI.Roomies.DAL
                 var p = new DynamicParameters();
                 p.Add( "@TaskId", taskId );
                 p.Add( "@RoomieId", roomieId );
-                //p.Add( "@TaskId", dbType: DbType.Int32, direction: ParameterDirection.Output );
-                //p.Add( "@RoomieId", dbType: DbType.Int32, direction: ParameterDirection.Output );
                 p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
                 await con.ExecuteAsync( "rm.sTaskRoomAdd", p, commandType: CommandType.StoredProcedure );
 
@@ -76,31 +74,10 @@ namespace ITI.Roomies.DAL
                 p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
                 await con.ExecuteAsync( "rm.sTaskRoomDeleteByTaskId", p, commandType: CommandType.StoredProcedure );
 
-                //int status = p.Get<int>( "@Status" );
-                //if( status == 1 ) return Result.Failure( Status.NotFound, "Roomie not found." );
-
-                //Debug.Assert( status == 0 );
                 return Result.Success();
             }
         }
-
-        //public async Task<Result> Delete( int taskId, int roomieId )
-        //{
-        //    using( SqlConnection con = new SqlConnection( _connectionString ) )
-        //    {
-        //        var p = new DynamicParameters();
-        //        p.Add( "@TaskId", taskId );
-        //        p.Add( "@RoomieId", roomieId );
-        //        p.Add( "@Status", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue );
-        //        await con.ExecuteAsync( "rm.sTaskRoomDelete", p, commandType: CommandType.StoredProcedure );
-
-        //        int status = p.Get<int>( "@Status" );
-        //        if( status == 1 ) return Result.Failure( Status.NotFound, "Roomie not found." );
-
-        //        Debug.Assert( status == 0 );
-        //        return Result.Success();
-        //    }
-        //}
+      
 
     }
 }

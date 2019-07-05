@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -17,7 +18,6 @@ namespace ITI.Roomies.WebApp.Controllers
     public class RoomiesController : Controller
     {
         readonly RoomiesGateway _roomiesGateway;
-        // readonly IEmailService _emailService;
 
         public RoomiesController( RoomiesGateway roomiesGateway )
         {
@@ -57,7 +57,14 @@ namespace ITI.Roomies.WebApp.Controllers
 
             return this.CreateResult( roomiePic );
 
-        } 
+        }
+
+        [HttpGet("getCollocPic/{collocId}")]
+        public async Task<IActionResult> getCollocPic(int collocId )
+        {
+            Result<string> collocPic = await _roomiesGateway.GetCollocPicAsync( collocId );
+            return this.CreateResult( collocPic );
+        }
 
         [HttpPost( "createRoomie" )]
         public async Task<IActionResult> CreateRoomie( [FromBody] RoomiesViewModel model )
@@ -79,14 +86,26 @@ namespace ITI.Roomies.WebApp.Controllers
             bool enableSSL = true;
             string emailFromAddress = "ITI.Roomies@gmail.com"; //Sender Email Address
             string password = "0123456789A@"; //Sender Password
-            string subject = "Hello";
-            string body = "Test";
+            string body = "Bienvenue sur Roomies";
 
             using( MailMessage mail = new MailMessage() )
             {
+
+
+                //const string fileName = "invitationRoomie.html";
+                ////Read HTML from file
+                //var content = System.IO.File.ReadAllText( fileName );
+                ////Replace all values in the HTML
+                //content = content.Replace( "{MY_TITLE}", titleTextBox.Text );
+                ////Write new HTML string to file
+                //System.IO.File.WriteAllText( fileName, content );
+                ////Show it in the default application for handling .html files
+                //Process.Start( fileName );
+
+
                 mail.From = new MailAddress( emailFromAddress );
                 mail.To.Add( email );
-                mail.Subject = "Testing";
+                mail.Subject = "Bienvenue sur Roomie";
                 mail.Body = body;
                 mail.IsBodyHtml = true;
 

@@ -3,9 +3,7 @@ using ITI.Roomies.WebApp.Authentication;
 using ITI.Roomies.WebApp.Models.CourseViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ITI.Roomies.WebApp.Controllers
@@ -21,43 +19,87 @@ namespace ITI.Roomies.WebApp.Controllers
             _courseGateway = courseGateway;
         }
 
-        [HttpGet("getList/{id}")]
-        public async Task<IActionResult> GetLists(int id)
+        [HttpGet( "getLists/{collocId}" )]
+        public async Task<IActionResult> GetAllLists( int collocId )
         {
-            IEnumerable<CourseData> result = await _courseGateway.GetAll(id);
+            IEnumerable<CourseData> result = await _courseGateway.GetAllLists( collocId );
             return Ok( result );
         }
 
-        [HttpGet( "GetAGroceryList/{courseId}", Name = "GetAGroceryList")]
-        public async Task<IActionResult> GetGroceryListById(int courseId)
+        //[HttpGet( "getTemplates/{collocId}" )]
+        //public async Task<IActionResult> GetTemplates( int collocId )
+        //{
+        //    IEnumerable<CourseTempData> result = await _courseGateway.GetAllTemplate( collocId );
+        //    return Ok( result );
+        //}
+
+        [HttpGet( "GetList/{courseId}", Name = "GetGroceryList" )]
+        public async Task<IActionResult> GetGroceryListById( int courseId )
         {
             Result<CourseData> result = await _courseGateway.FindById( courseId );
             return this.CreateResult( result );
         }
 
-        [HttpPost("createGroceryList")]
-        public async Task<IActionResult> CreateGroceryList( [FromBody] CourseViewModel model)
+        //[HttpGet( "GetTemplate/{courseId}", Name = "GetTemplate" )]
+        //public async Task<IActionResult> GetATemplateById( int courseTempId )
+        //{
+        //    Result<CourseTempData> result = await _courseGateway.FindTempById( courseTempId );
+        //    return this.CreateResult( result );
+        //}
+
+        [HttpPost( "create" )]
+        public async Task<IActionResult> CreateGroceryList( [FromBody] CourseViewModel model )
         {
-            Result<int> result = await _courseGateway.CreateGroceryList( model.CourseName, model.CourseDate, model.CollocId);
-            return this.CreateResult( result, o =>
-            {
-                o.RouteName = "GetAGroceryList";
-                o.RouteValues = courseId => new { courseId };
-            } );
+
+            //if( model.IsTemplate)
+            //{
+            //    Result<int> result = await _courseGateway.CreateTempGroceryList( model.CourseName, model.CollocId );
+            //    return this.CreateResult( result, o =>
+            //    {
+            //        o.RouteName = "GetTemplate";
+            //        o.RouteValues = courseId => new { courseId };
+            //    } );
+            //}
+            //else
+            //{ 
+                Result<int> result = await _courseGateway.CreateGroceryList( model.CourseName, model.CourseDate, model.CollocId );
+                return this.CreateResult( result, o =>
+                {
+                    o.RouteName = "GetGroceryList";
+                    o.RouteValues = courseId => new { courseId };
+                } );
+            //}
         }
 
-        [HttpPut("updateGroceryList")]
-        public async Task<IActionResult> UpdateAGroceryList([FromBody] CourseViewModel model )
+
+        [HttpPut( "update" )]
+        public async Task<IActionResult> UpdateAGroceryList( [FromBody] CourseViewModel model )
         {
-            Result result = await _courseGateway.UpdateGroceryList( model.CourseId, model.CourseName, model.CourseDate);
-            return this.CreateResult( result );
+            //if (model.IsTemplate)
+            //{
+            //    Result result = await _courseGateway.UpdateGroceryListTemp( model.CourseId, model.CourseName );
+            //    return this.CreateResult( result );
+            //}
+            //else
+            //{
+                Result result = await _courseGateway.UpdateGroceryList( model.CourseId, model.CourseName, model.CourseDate );
+                return this.CreateResult( result );
+            //}
+            
         }
 
-        [HttpDelete( "{id}" )]
-        public async Task<IActionResult> DeleteAgroceryList (int courseId)
+        [HttpDelete( "{courseId}" )]
+        public async Task<IActionResult> DeleteAgroceryList( int courseId )
         {
             Result result = await _courseGateway.DeleteGroceryList( courseId );
             return this.CreateResult( result );
         }
+
+        //[HttpDelete( "deleteTemplate/{courseId}" )]
+        //public async Task<IActionResult> DeleteTemplate( int courseId)
+        //{
+        //    Result result = await _courseGateway.DeleteGroceryListTemp( courseId );
+        //    return this.CreateResult( result );
+        //}
     }
 }

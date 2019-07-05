@@ -1,0 +1,1 @@
+export var monthFr = ['Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.','Août','Sept.','Oct.','Nov.', 'Dec.'];

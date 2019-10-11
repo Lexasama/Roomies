@@ -21,7 +21,7 @@ namespace ITI.Roomies.WebApp.Controllers
             _imageGateway = imageGateway;
         }
 
-        [HttpPost( "uploadImage/{id}/{isRoomie}" )]
+        [HttpPost( "uploadImage" )]
         public async Task<IActionResult> UploadImage( IFormCollection model, int id, bool isRoomie )
         {
             if( isRoomie )

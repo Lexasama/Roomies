@@ -43,9 +43,10 @@ export default {
   },
 
   async mounted() {
-    console.log("options=");
-    console.log(this.Options);
     this.categoryId =this.Options.categoryId;
+    this.$root.$on("updateCategoryList", async () => {
+      await this.refresh();
+    })
     await this.refresh();
   },
   

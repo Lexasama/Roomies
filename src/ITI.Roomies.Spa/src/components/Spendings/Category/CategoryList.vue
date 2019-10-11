@@ -53,7 +53,6 @@
 
 <script>
 import { getCategoriesAsync, deleteCategoryAsync} from "../../../api/SpendingsApi/CategoryApi";
-import { deleteAsync } from '../../../helpers/apiHelper';
 import CategoryInfo from '../Category/CategoryInfo.vue';
 
 export default {

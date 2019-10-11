@@ -51,7 +51,7 @@ export default {
 }
 .tdcreatecategory1{
   max-width: 45%;
-  height: 30vh;
+ // height: 30vh;
   float: right;
 }
 .el-col {

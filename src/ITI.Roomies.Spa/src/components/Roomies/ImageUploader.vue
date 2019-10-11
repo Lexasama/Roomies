@@ -126,6 +126,7 @@ export default {
     if (this.mode == "edit") {
       this.create = false;
     } else {
+       this.create = true;
       if (this.object == "roomie") {
         this.isRoomie = true;
       } else {

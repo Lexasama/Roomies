@@ -74,7 +74,11 @@ export default {
           this.item.itemPrice = this.item.itemPrice * 100;
           await createItem(this.item);
 
-          window.alert("Objet enregistré");
+          this.$message({
+            message: 'Objet '+ this.item.itemName + ' enregistré.',
+            type: 'success'
+          });
+           
         } catch (e) {
           console.error(e);
         }

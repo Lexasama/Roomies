@@ -21,13 +21,13 @@
         </div>
 
         <div>
-          <label class="required">Nom</label>
-          <input class="form-control" type="text" v-model="item.lastName" required>
+          <label class="required">Prénom</label>
+          <input class="form-control" type="text" v-model="item.firstName" required>
         </div>
 
         <div>
-          <label class="required">Prénom</label>
-          <input class="form-control" type="text" v-model="item.firstName" required>
+          <label class="required">Nom</label>
+          <input class="form-control" type="text" v-model="item.lastName" required>
         </div>
 
         <div>

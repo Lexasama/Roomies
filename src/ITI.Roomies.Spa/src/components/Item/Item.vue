@@ -3,7 +3,7 @@
     <br>
     <table class="mainTable" vertical-align="top">
       <tr>
-        <td valign="left">
+        <td style="width: 70%;" valign="left">
           <main class="card mainCard cardCurrentItem">
             <header>
               <h2>Objet dans {{courseName}}</h2>
@@ -41,7 +41,7 @@
             </table>
           </main>
         </td>
-        <td>
+        <td style="width: 80%;">
           <main class="card mainCard cardItemToAdd">
             <header>
               <h3>Ajouter un objet</h3>
@@ -265,11 +265,13 @@ export default {
 <style scoped>
 .cardCurrentItem {
   max-width: 90%;
+  min-width: 40%;
   min-height: 20rem;
   flex: left;
 }
 .cardItemToAdd {
   max-width: 90%;
+  min-width: 40%;
   min-height: 20rem;
 }
 

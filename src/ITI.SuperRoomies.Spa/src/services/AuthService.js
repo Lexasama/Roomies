@@ -58,7 +58,7 @@ class AuthService {
 
         var popup = window.open(
             provider.endpoint,
-            "Connexion à Roomies",
+            "Connexion à Super Roomies",
             "menubar=no, status=no, scrollbars=no, menubar=no, width=700, height=700"
         );
     }
@@ -85,7 +85,7 @@ class AuthService {
     logout() {
         var popup = window.open(
             this.logoutEndpoint,
-            "Déconnexion de Roomies",
+            "Déconnexion",
             "menubar=no, status=no, scrollbars=no, menubar=no, width=700, height=600"
         );
     }

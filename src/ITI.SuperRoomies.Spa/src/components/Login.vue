@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="centered_container">
-      <h2 class="centered">{{$t("Welcome")}}</h2>
+      <h2 class="centered">Bienvenue</h2>
 
       <div>
         <button

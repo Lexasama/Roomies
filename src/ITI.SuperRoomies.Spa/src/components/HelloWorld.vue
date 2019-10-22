@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>Hello word vue</div>
 </template>
 
 <script>

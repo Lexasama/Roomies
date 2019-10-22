@@ -1,7 +1,17 @@
 <template>
-  <div></div>
+  <div>App</div>
 </template>
 
+
+<script>
+export default {
+  data() {
+    return {
+      env: process.env.VUE_APP_BACKEND
+    };
+  }
+};
+</script>
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
